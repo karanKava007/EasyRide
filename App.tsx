@@ -14,6 +14,7 @@ import WelToEasyRide from './src/container/WelToRide';
 import Dashbord from './src/container/Dashbord';
 import PhoneNumber from './src/container/PhoneNumber';
 import Otp from './src/container/Otp';
+import Otp1 from './src/container/Otp1';
 
 function App(): JSX.Element{
   return(
@@ -21,11 +22,12 @@ function App(): JSX.Element{
      {/* <Spl/> */}
      {/* <PhoneNumber/> */}
      {/* <Otp/> */}
+     <Otp1/>
      {/* <Permisionocation/> */}
      {/* <City/> */}
      {/* <PassDri/> */}
      {/* <WelToEasyRide/> */}
-     <Dashbord/>
+     {/* <Dashbord/> */}
      {/* <NavigationContainer>
       <DrawerNav/>
     </NavigationContainer> */}
