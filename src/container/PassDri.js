@@ -1,21 +1,22 @@
 import { View, Text, StyleSheet, Image, Button, TouchableOpacity } from 'react-native'
 import React from 'react'
+import { horizontalScale, verticalScale } from '../helper/ Metrics'
 
-export default function PassDri() {
+export default function PassDri({navigation}) {
   return (
     <View style={style.container}>
         <View style={style.info}>
-            <Text style={style.infotext}>Are You a Passenger or a Driver?</Text>
+            <Text style={style.infotext}>Are You a Employee or a Driver?</Text>
         </View>
         <View style={style.img}>
             {/* <Text style={style.dummy}>Hello</Text> */}
             <Image source={require('../../src/assets/image/PassDri.png')} style={style.logo}/>
         </View>
         <View style={style.btn}>
-            <TouchableOpacity>
-                <Text style={style.btnpass}>Passenger</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('WelToRide')}>
+                <Text style={style.btnpass}>Employee</Text>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('DriverRegistration')}>
                 <Text style={style.btndri}>Driver</Text>
             </TouchableOpacity>
         </View>
@@ -26,12 +27,12 @@ const style = StyleSheet.create({
     container:{
         flex:1,
         backgroundColor:'white',
-        padding:30,
+        padding:40,
         // paddingHorizontal:50,
         alignItems:'center',
     },
     info:{
-        flex:1,
+        // flex:0.6,
         justifyContent:'center',
     },
     infotext:{
@@ -43,21 +44,23 @@ const style = StyleSheet.create({
     },
     img:{
         flex:2,
-        width: '115%',
-        // justifyContent:'center',
-        // // marginHorizontal: 20,
+        // width: '115%',
+        marginTop:'15%',
+        // width:horizontalScale(325),
         alignItems:'center',
-        // padding:20,
-        // backgroundColor: 'red'
     },
     logo:{
-        width: '90%',
-        height: '90%',
+        // width: '90%',
+        width:horizontalScale(295),
+        // height: '85%',
+        height:verticalScale(310),
     },
     btn:{
         flex:1,
-    //    marginTop:100,
-        width:'105%',
+        // width:'105%',
+        height:verticalScale(55),
+        // paddingHorizontal:horizontalScale(120),
+        width:horizontalScale(295),
     },
     btnpass:{
         backgroundColor:'#194af9',
@@ -66,7 +69,7 @@ const style = StyleSheet.create({
         borderRadius:30,
         textAlign:'center',
         fontSize:22,
-        marginTop:30,
+        marginTop:50,
         fontFamily:'Poppins-SemiBold',
     },
     btndri:{

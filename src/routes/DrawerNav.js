@@ -3,19 +3,48 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Demo from '../container/Demo';
 import Hello from '../container/Hello';
 import { TabNav } from './TabNav';
-
+import Dashbord from '../container/Dashbord';
+import FAQbehind from '../container/FAQbehind';
+import FaqMain from '../container/FaqMain';
+import { StackNav } from './StackNav';
+import Security from '../container/Security';
+import CustomDrawer from '../component/CustomDrawer';
+import Setting from '../container/Setting';
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 const Drawer = createDrawerNavigator();
-
-
-const DrawerNav=()=>{
-    return(
-<Drawer.Navigator>
-      <Drawer.Screen name="Demo" component={TabNav} />
-      <Drawer.Screen name="Hello" component={Demo} />
+const DrawerNav = () => {
+  return (
+    <Drawer.Navigator drawerContent={props => <CustomDrawer {...props} />}>
+      <Drawer.Screen name="Dashbord1" component={Dashbord} options={{
+        headerTransparent: true, title: 'Dashbord', headerTitle: '', drawerIcon: ({ focused, size }) => (
+          <Icon name="dashboard" size={size} color={focused ? '#2482e3' : '#898989'} />
+      ),
+    }
+  }
+/>
+      <Drawer.Screen name="Safety" component={Security} options={{
+        headerTitle: '', drawerIcon: ({ focused, size }) => (
+          <Icon name="security" size={size} color={focused ? '#2482e3' : '#898989'} />
+      ),
+    }
+  }
+/>
+      <Drawer.Screen name="FAQ" component={FaqMain} options={{
+        headerTitleAlign: 'center', drawerIcon: ({ focused, size }) => (
+          <Icon name="question-answer" size={size} color={focused ? '#2482e3' : '#898989'} />
+      ),
+    }
+  }
+/>
+      <Drawer.Screen name="Settings" component={Setting} options={{
+        headerTitleAlign: 'center', drawerIcon: ({ focused, size }) => (
+          <Icon name="settings" size={size} color={focused ? '#2482e3' : '#898989'} />
+      ),
+    }
+  }
+/>
     </Drawer.Navigator>
-
-    )
+  )
 }
-
-export{DrawerNav}
+export { DrawerNav }

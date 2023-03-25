@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import { Dropdown } from 'react-native-element-dropdown';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import React, { useState } from 'react';
+
 const data1 = [
 
     { label1: 'Item 1', value: '1' },
@@ -39,29 +40,27 @@ const data3 = [
 
 
 
-
-
-export default function Dashbord() {
+export default function Dashbord({navigation}) {
     const [value, setValue] = useState(null);
 
     return (
         <View style={styles.container}>
             <View style={styles.subconatiner1}>
-                <Image source={require('../assets/image/map.png')} style={styles.map} />
+                <Image source={require('../assets/image/Screenshot.png')} style={styles.map} />
             </View>
             <View style={styles.subcontainer2}>
                 <View style={{ flex: 1, flexDirection: 'row' }}>
 
                     <TouchableOpacity style={styles.vectorbtn}>
-                        <Image source={require('../assets/image/car.png')} />
-                        <Text style={styles.vectorText}>Car</Text>
+                        <Image source={require('../assets/image/car.png')} style={styles.img}/>
+                        <Text style={styles.vectorText1}>Car</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.vectorbtn}>
-                        <Image source={require('../assets/image/scooter.png')} />
+                        <Image source={require('../assets/image/scooter.png')}style={styles.img2}/>
                         <Text style={styles.vectorText}>Scooter</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.vectorbtn}>
-                        <Image source={require('../assets/image/bike.png')} />
+                        <Image source={require('../assets/image/bike.png')}style={styles.img3} />
                         <Text style={styles.vectorText}>Bike</Text>
                     </TouchableOpacity>
 
@@ -138,7 +137,7 @@ export default function Dashbord() {
                         )}
 
                     />
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity style={styles.button}  onPress={() => navigation.navigate('AvailDri')}>
                         <Text style={styles.btnText}>Find Driver</Text>
                     </TouchableOpacity>
                 </View>
@@ -158,8 +157,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     map: {
-        width: 415,
-        height: 505,
+        width:'100%',
+        height: '100%',
     },
     subcontainer2: {
         flex: 5,
@@ -169,9 +168,9 @@ const styles = StyleSheet.create({
 
     },
     vectorbtn: {
-        width: 85,
-        marginTop: 15,
-        height: 85,
+        width: '20%',
+        marginTop: 10,
+        height: '70%',
         marginLeft: 15,
         alignItems: 'center',
         justifyContent: 'center',
@@ -184,9 +183,14 @@ const styles = StyleSheet.create({
     },
     vectorText: {
         color: '#0D0F17',
-        fontFamily: 'Poppins-Black',
+        // fontFamily: 'Poppins-Black',
         fontSize: 12,
-
+    },
+    vectorText1:{
+        // marginTop:'10%'
+        color: '#0D0F17',
+        fontSize: 12,
+        marginTop:'5%'
     },
     dropdown: {
         margin: 10,
@@ -220,8 +224,6 @@ const styles = StyleSheet.create({
         height: 40,
         fontSize: 16,
         color: '#0D0F17',
-
-
     },
     button: {
         backgroundColor: '#194AF9',
@@ -230,7 +232,7 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         borderRadius: 90,
         marginHorizontal: 30,
-        marginTop:'10%',
+        marginTop:'6%',
 
     },
     btnText: {
@@ -239,4 +241,16 @@ const styles = StyleSheet.create({
         fontSize: 22,
         fontFamily: 'Poppins-SemiBold'
     },
+    img:{
+        width:'80%',
+        height:'50%',
+    },
+    img2:{
+        width:'53%',
+        height:'60%',
+    },
+    img3:{
+        width:'59%',
+        height:'61%',
+    }
 })

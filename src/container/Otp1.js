@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, TextInput,TouchableOpacity } from 'react-native'
 import React from 'react'
-export default function Otp1() {
+import { horizontalScale, verticalScale } from '../helper/ Metrics';
+export default function Otp1({navigation}) {
   return (
     <View style={Styles.container}>
         <View style={Styles.v1}>
@@ -15,7 +16,7 @@ export default function Otp1() {
             <TextInput style={Styles.box}>4</TextInput>
         </View>
         <View style={Styles.button}>
-                <TouchableOpacity style={Styles.btn} onPress={this.onPress}>
+                <TouchableOpacity style={Styles.btn} onPress={() => navigation.navigate('Permisionocation')}>
                     <Text style={Styles.btntxt}>Verify</Text>
                 </TouchableOpacity>
         </View>
@@ -73,18 +74,16 @@ const Styles = StyleSheet.create({
         fontWeight:'900',
     },
     button:{
-        width: '100%',
-        // height:'100%',
         alignItems: 'center',
         marginTop:'15%'
     },
     btn:{
-    backgroundColor: '#194AF9',
-    height:'30%',
-    paddingHorizontal:'35%',
-    borderRadius: 30,
-    justifyContent:'center',
-    alignItems:'center',
+        backgroundColor: '#194AF9',
+        height:verticalScale(55),
+        paddingHorizontal:horizontalScale(120),
+        borderRadius: 30,
+        justifyContent:'center',
+        alignItems:'center',
     },
     btntxt:{
         fontFamily:'Poppins-SemiBold',

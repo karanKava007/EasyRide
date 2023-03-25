@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-export default function Permisionocation() {
+export default function Permisionocation({navigation}) {
     return (
         <View style={styles.container}>
             <View style={styles.subcontainer1}>
@@ -20,11 +20,11 @@ export default function Permisionocation() {
                 </View>
             </View>
             <View style={styles.subcontainer2}>
-                <TouchableOpacity style={styles.buttonclose}>
+                <TouchableOpacity style={styles.buttonclose} onPress={() => navigation.navigate('Otp1')}>
                     <AntDesign name="close" color={'white'} size={48} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.buttoncheck}>
-                    <AntDesign name="check" color={'white'} size={48} />
+                    <AntDesign name="check" color={'white'} size={48} onPress={() => navigation.navigate('City')} />
                 </TouchableOpacity>
             </View>
         </View>

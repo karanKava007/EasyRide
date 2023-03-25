@@ -3,7 +3,7 @@ import React from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 
-export default function City() {
+export default function City({navigation}) {
   return (
     <View style={styles.container}>
      
@@ -18,7 +18,7 @@ export default function City() {
       </View>
       
       <View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('PassDri')}>
           <Text style={styles.btn}>Next</Text>
         </TouchableOpacity>
       </View>

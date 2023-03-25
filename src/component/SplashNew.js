@@ -1,11 +1,36 @@
-import { View, Text, StyleSheet, TouchableOpacity , Image} from 'react-native'
-import React from 'react'
+import { View, Text, StyleSheet, TouchableOpacity, Animated} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient';
 import { horizontalScale, verticalScale } from '../helper/ Metrics';
+import React, {useRef, useEffect} from 'react';
 
-export default function Spl({navigation}) {
+const FadeInView = props => {
+    const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
+  
+    useEffect(() => {
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 10000,
+        useNativeDriver: true,
+      }).start();
+    }, [fadeAnim]);
+  
     return (
-        
+      <Animated.View // Special animatable View
+        style={{
+          ...props.style,
+          opacity: fadeAnim, // Bind opacity to animated value
+        }}>
+        {props.children}
+      </Animated.View>
+    );
+  };
+
+export default function SplashNew({}) {
+    return (
+  
+
+  <FadeInView>
+
         // <LinearGradient colors={['#ACBDFA', '#194AF9']} style={styles.container}>
         <LinearGradient colors={['#6487ff', '#0038ff']} style={styles.container}>
             <View style={styles.logoSection}>
@@ -15,6 +40,7 @@ export default function Spl({navigation}) {
                     <Text style={styles.t3}>SAVE FUEL, REDUCE TRAFFIC</Text>
                 </View>
             </View>
+  </FadeInView>
             {/* Button Section */}
             <View style={styles.buttonSection}>
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('PhoneNumber')}>
@@ -70,3 +96,10 @@ const styles = StyleSheet.create({
         marginVertical:'-2%'
     }
 });
+
+
+
+
+
+
+

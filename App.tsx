@@ -15,22 +15,42 @@ import Dashbord from './src/container/Dashbord';
 import PhoneNumber from './src/container/PhoneNumber';
 import Otp from './src/container/Otp';
 import Otp1 from './src/container/Otp1';
+import FAQbehind from './src/container/FAQbehind';
+import SplashNew from './src/component/SplashNew';
+import { Provider } from 'react-redux';
+import { configStore } from './src/redux/Store';
+import Counter from './src/container/Counter';
+import Post from './src/container/post/Post';
+import Profile from './src/container/Profile';
+import AvailDri from './src/container/AvailDri';
+import Sample from './src/container/Sample';
+import DriverRegistration from './src/container/DriverRegistration';
 
 function App(): JSX.Element{
+  const store = configStore();
   return(
     <>
      {/* <Spl/> */}
      {/* <PhoneNumber/> */}
      {/* <Otp/> */}
-     <Otp1/>
+     {/* <Otp1/> */}
      {/* <Permisionocation/> */}
      {/* <City/> */}
      {/* <PassDri/> */}
      {/* <WelToEasyRide/> */}
      {/* <Dashbord/> */}
-     {/* <NavigationContainer>
-      <DrawerNav/>
-    </NavigationContainer> */}
+     {/* <FAQbehind/> */}
+     {/* <DriverRegistration/> */}
+     <NavigationContainer>
+      <StackNav/>
+    </NavigationContainer>
+    {/* <AvailDri/> */}
+    {/* <Sample/> */}
+    {/* <Profile/> */}
+     {/* <Provider store={store}> */}
+         {/* <Counter/> */}
+        {/* <Post/>  */}
+    {/* </Provider> */}
     </> 
   );
 }
