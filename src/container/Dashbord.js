@@ -49,31 +49,6 @@ export default function Dashbord({ navigation }) {
     const [stime, setStime] = useState(new Date())
     const [openTime, setOpenTime] = useState(false)
     const [showTime, setShowTime] = useState(true)
-    const [selectedValue1, setSelectedValue1] = useState('395008');
-    const [selectedValue2, setSelectedValue2] = useState('395004');
-    const [c, setC] = useState(null);
-    const [returnvalue , setReturnvalue] = useState(null)
-
-    useEffect(() => {
-        if (selectedValue1 === '395008' && selectedValue2 === '395004') {
-            setC('8');
-        }
-        else {
-            setC(null);
-        }
-    }, [selectedValue1, selectedValue2])
-
-    // const PriceCalculator = () => {
-    //     // const [distance, setDistance] = useState('');
-    //     const pricePerKm = 10;
-    // }
-    const pricePerKm = 10;
-    const calculatePrice = (pricePerKm , setC) => {
-            
-            const price = pricePerKm * parseInt(setC);
-            setReturnvalue (price);
-        }
-    
 
     return (
         <View style={styles.container}>
@@ -102,8 +77,7 @@ export default function Dashbord({ navigation }) {
                 <View style={{ flex: 3 }}>
                     <Dropdown
                         // value={395008}
-                        selectedValue={selectedValue1}
-                        
+                        // selectedValue={selectedValue1}
                         style={styles.dropdown}
                         placeholderStyle={styles.placeholderStyle}
                         selectedTextStyle={styles.selectedTextStyle}
@@ -128,7 +102,7 @@ export default function Dashbord({ navigation }) {
                     />
                     <Dropdown
                         // value={395008}
-                        selectedValue={selectedValue2}
+                        // selectedValue={selectedValue2}
                         style={styles.dropdown}
                         placeholderStyle={styles.placeholderStyle}
                         selectedTextStyle={styles.selectedTextStyle}
@@ -169,18 +143,6 @@ export default function Dashbord({ navigation }) {
                             setOpenTime(false)
                         }}
                     />
-                    {/* <TextInput /> */}
-                    <View>
-                        <Button
-                            title="Calculate Price"
-                            onPress={()=>calculatePrice(pricePerKm,setC)}
-                            // onPress={()=>calculatePrice(pricePerKm,setC)}
-                        >
-                        </Button>
-                        <Text style={styles.txt}>
-                        {returnvalue && <Text style={styles.txt}>Price: {returnvalue}</Text>}
-                        </Text>
-                    </View>
 
                     <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AvailDri')}>
                         <Text style={styles.btnText}>Find Driver</Text>

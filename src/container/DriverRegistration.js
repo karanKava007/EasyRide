@@ -274,6 +274,7 @@ import React, { useState } from 'react'
 import DatePicker from 'react-native-date-picker'
 import { Dropdown } from 'react-native-element-dropdown';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { horizontalScale, verticalScale } from '../helper/ Metrics';
 
 
 
@@ -319,9 +320,9 @@ export default function Extra() {
     ];// keyboardType = 'numeric'
 
     const checkData = () => {
-        let d  = new Date(date);
+        let d = new Date(date);
 
-        if ((new Date().getFullYear()  - d.getFullYear()) < 18) {
+        if ((new Date().getFullYear() - d.getFullYear()) < 18) {
             setErr("You are under 18.")
         } else {
             setErr("")
@@ -362,7 +363,7 @@ export default function Extra() {
                             setOpen(false)
                         }} />
 
-                        <Text style={{color: 'red'}}>{err}</Text>
+                    <Text style={{ color: 'red' }}>{err}</Text>
 
                     <Dropdown
                         style={styles.dropdown}
@@ -439,9 +440,11 @@ export default function Extra() {
                         onCancel={() => {
                             setOpenTime(false)
                         }} />
-                    <TouchableOpacity style={styles.button} onPress={checkData}>
-                        <Text style={styles.btnText}>Next</Text>
-                    </TouchableOpacity>
+                    <View style={styles.button1}>
+                        <TouchableOpacity style={styles.button} onPress={checkData}>
+                            <Text style={styles.btnText}>Next</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
 
@@ -458,13 +461,13 @@ const styles = StyleSheet.create({
     dropdown: {
         color: 'black',
         fontSize: 16,
-        paddingHorizontal: 20,
-        paddingVertical: 5,
+        paddingHorizontal: horizontalScale(20),
+        paddingVertical: verticalScale(5),
         borderColor: '#898989',
         borderRadius: 10,
         borderWidth: 1,
-        marginHorizontal: 20,
-        marginVertical: 10,
+        marginHorizontal: horizontalScale(20),
+        marginVertical: verticalScale(12),
 
     },
     icon: {
@@ -484,8 +487,6 @@ const styles = StyleSheet.create({
     iconStyle: {
         width: 20,
         height: 20,
-
-
     },
     inputSearchStyle: {
         height: 40,
@@ -494,7 +495,8 @@ const styles = StyleSheet.create({
     },
     subcontainer1: {
         alignItems: 'center',
-        margin: 20,
+        // margin: 30,
+        marginTop: verticalScale(20)
     },
     text: {
         color: '#0D0F17',
@@ -511,35 +513,42 @@ const styles = StyleSheet.create({
     textname: {
         color: 'black',
         fontSize: 16,
-        paddingHorizontal: 20,
-        paddingVertical: 10,
+        paddingHorizontal: horizontalScale(20),
+        paddingVertical: verticalScale(10),
         borderColor: '#898989',
         borderRadius: 10,
         borderWidth: 1,
-        marginHorizontal: 20,
-        marginVertical: 10,
+        marginHorizontal: horizontalScale(20),
+        marginVertical: verticalScale(12),
+        marginTop: verticalScale(20)
     },
     textnamee: {
         color: '#868686',
         fontSize: 16,
-        paddingHorizontal: 20,
-        paddingVertical: 10,
+        paddingHorizontal: horizontalScale(20),
+        paddingVertical: verticalScale(14),
         borderColor: '#898989',
         borderRadius: 10,
         borderWidth: 1,
-        marginHorizontal: 20,
-        marginVertical: 10,
+        marginHorizontal: horizontalScale(20),
+        marginVertical: verticalScale(12),
     },
 
     button: {
+        // alignItems: 'center',
+        // backgroundColor: '#194AF9',
+        // marginHorizontal: horizontalScale(25),
+        // paddingHorizontal: horizontalScale(25),
+        // paddingVertical: 15,
+        // borderRadius: 90,
+        // marginHorizontal: 15,
+        marginTop: 90,
         alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor: '#194AF9',
-        marginHorizontal: 25,
-        marginTop: 100,
-        paddingHorizontal: 25,
-        paddingVertical: 15,
         borderRadius: 90,
-        marginHorizontal: 15,
+        height: verticalScale(60),
+        width: horizontalScale(320),
     },
     boxtext: {
         borderWidth: 1,
@@ -547,10 +556,13 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderColor: '#B6B6B6',
         marginTop: 20,
-        padding: 10,
+        // padding: 10,
         color: '#898989',
     },
     bold: {
         color: '#000'
-    }
+    },
+    button1: {
+        alignItems: 'center',
+    },
 })

@@ -19,13 +19,8 @@ export default function WelToEasyRide({ navigation }) {
                 <Text style={styles.h3}>Let's Get acquainted</Text>
             </View>
             <View>
-                <TextInput placeholder='Employee_Id' style={styles.box} placeholderTextColor="#898989"></TextInput>
-                <TextInput placeholder="Password" style={styles.box} placeholderTextColor="#898989" autoCapitalize="none" autoCorrect={false}
-                    textContentType="newPassword"
-                    secureTextEntry
-                    value={password}
-                    enablesReturnKeyAutomatically
-                    onChangeText={text => setPassword(text)} />
+                <TextInput placeholder='First_Name' style={styles.box} placeholderTextColor="#898989"/>
+                <TextInput placeholder="Last_Name" style={styles.box} placeholderTextColor="#898989"/>
 
                 {/* <TextInput placeholder='DOB' style={styles.box} placeholderTextColor="#898989" onPress={() => setOpen(true)}></TextInput> */}
                 {/* <Button title="DOB" onPress={() => setOpen(true)} style={styles.box}  /> */}

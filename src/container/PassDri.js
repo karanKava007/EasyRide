@@ -14,7 +14,7 @@ export default function PassDri({navigation}) {
         </View>
         <View style={style.btn}>
             <TouchableOpacity onPress={() => navigation.navigate('WelToRide')}>
-                <Text style={style.btnpass}>Employee</Text>
+                <Text style={style.btnpass}>Passenger</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('DriverRegistration')}>
                 <Text style={style.btndri}>Driver</Text>
