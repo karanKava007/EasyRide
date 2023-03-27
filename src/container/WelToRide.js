@@ -2,12 +2,15 @@ import { Text, View, StyleSheet, TextInput, TouchableOpacity, Button } from 'rea
 import React, { useState } from 'react';
 import DatePicker from 'react-native-date-picker';
 import { horizontalScale, verticalScale } from '../helper/ Metrics';
+// import DatePicker from 'react-native-datepicker'
 
 export default function WelToEasyRide({ navigation }) {
     const [date, setDate] = useState(new Date())
+    const [tDate, setTDate] = useState(new Date())
     const [open, setOpen] = useState(false)
     const [show, setShow] = useState(true)
-
+    const [password, setPassword] = useState('');
+    var moment = require('moment');
     return (
 
         <View style={styles.container}>
@@ -17,7 +20,13 @@ export default function WelToEasyRide({ navigation }) {
             </View>
             <View>
                 <TextInput placeholder='Employee_Id' style={styles.box} placeholderTextColor="#898989"></TextInput>
-                <TextInput placeholder='Password' style={styles.box} placeholderTextColor="#898989"></TextInput>
+                <TextInput placeholder="Password" style={styles.box} placeholderTextColor="#898989" autoCapitalize="none" autoCorrect={false}
+                    textContentType="newPassword"
+                    secureTextEntry
+                    value={password}
+                    enablesReturnKeyAutomatically
+                    onChangeText={text => setPassword(text)} />
+
                 {/* <TextInput placeholder='DOB' style={styles.box} placeholderTextColor="#898989" onPress={() => setOpen(true)}></TextInput> */}
                 {/* <Button title="DOB" onPress={() => setOpen(true)} style={styles.box}  /> */}
                 <TouchableOpacity onPress={() => setOpen(true)}>
@@ -29,6 +38,8 @@ export default function WelToEasyRide({ navigation }) {
                     modal
                     open={open}
                     date={date}
+                    maximumDate={tDate}
+
                     onConfirm={(date) => {
                         setOpen(false)
                         setDate(date)
@@ -38,6 +49,24 @@ export default function WelToEasyRide({ navigation }) {
                     onCancel={() => {
                         setOpen(false)
                     }} />
+                {/* <DatePicker
+                    style={{ width: 200, }}
+                    date={date}
+                    mode="date"
+                    showIcon={false}
+                    // placeholder={dob}
+                    format="YYYY-MM-DD"
+                    minDate="1950-01-01"
+                    maxDate={moment().subtract(18, 'years').format('YYYY-MM-DD')}
+                    confirmBtnText="Confirm"
+                    cancelBtnText="Cancel"
+                    customStyles={{
+                        dateInput: {
+                            marginLeft: -76, borderWidth: 0, color: 'black'
+                        }
+                    }}
+                    onDateChange={(date) => {date: date }}
+                /> */}
             </View>
 
             <View style={styles.buttonSection}>
@@ -124,7 +153,7 @@ const styles = StyleSheet.create({
         color: '#898989',
     },
     boxtext1: {
-        color:'black',
+        color: 'black',
     },
     text: {
         color: '#898989'

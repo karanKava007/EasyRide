@@ -1,13 +1,286 @@
+// import { View, Text, Button, TouchableOpacity, StyleSheet, TextInput } from 'react-native'
+// import React, { useState } from 'react'
+// import DatePicker from 'react-native-date-picker'
+// import { Dropdown } from 'react-native-element-dropdown';
+// import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+// import { horizontalScale, verticalScale } from '../helper/ Metrics';
+
+
+// export default function Extra({navigation}) {
+//     const [date, setDate] = useState(new Date())
+//     const [time, setTime] = useState(new Date())
+
+//     const [open, setOpen] = useState(false)
+//     const [openTime, setOpenTime] = useState(false)
+
+//     const [show, setShow] = useState(true)
+//     const [showTime, setShowTime] = useState(true)
+
+
+
+//     const data1 = [
+
+//         { label1: 'Male', value: '1' },
+//         { label1: 'Female', value: '2' },
+
+//     ];// keyboardType = 'numeric'
+
+//     const [value, setValue] = useState(null);
+//     const data2 = [
+
+//         { label1: '395006', value: '1' },
+//         { label1: '395010', value: '2' },
+//         { label1: '395004', value: '3' }
+
+//     ];// keyboardType = 'numeric'
+
+//     const [pin, setPin] = useState(null);
+
+//     const vehicleData = [
+
+//         { label1: 'Car', value: '1' },
+//         { label1: 'Bike', value: '2' },
+//         { label1: 'Scooter', value: '3' },
+
+
+
+//     ];// keyboardType = 'numeric'
+
+//     const [vehicle, setVehicle] = useState(null);
+//     return (
+// <>
+//     <View style={styles.container}>
+//         <View style={styles.subcontainer1}>
+//             {/* <Text style={styles.text}>Driver Information</Text> */}
+//         </View>
+//         <View>
+//             <TextInput placeholder='First Name' placeholderTextColor={'#898989'} style={styles.textname} />
+//             <TextInput placeholder='Last Name' placeholderTextColor={'#898989'} style={styles.textname} />
+//             <TouchableOpacity onPress={() => setOpen(true)} >
+//                 <Text style={[styles.textnamee]}>{show ? "DOB" : <Text style={styles.textname}>{date.toDateString()}</Text>}</Text>
+//             </TouchableOpacity>
+//                 <DatePicker
+//                     mode="date"
+//                     modal
+//                     open={open}
+//                     date={date}
+//                     onConfirm={(date) => {
+//                         setOpen(false)
+//                         setDate(date)
+//                         setShow(false)
+//                             // console.log(date);
+//                     }}
+//                     onCancel={() => {
+//                         setOpen(false)
+//                     }} />
+
+//                 <Dropdown
+//                     style={styles.dropdown}
+//                     placeholderStyle={styles.placeholderStyle}
+//                     selectedTextStyle={styles.selectedTextStyle}
+//                     iconStyle={styles.iconStyle}
+//                     data={data1}
+//                     maxHeight={300}
+//                     labelField="label1"
+//                     valueField="value"
+//                     placeholder="Gender"
+//                     value={value}
+//                     itemTextStyle={{ color: 'black' }}
+//                     onChange={item => {
+//                         setValue(item.value);
+//                     }}
+//                 />
+//                 <Dropdown
+//                     style={styles.dropdown}
+//                     placeholderStyle={styles.placeholderStyle}
+//                     selectedTextStyle={styles.selectedTextStyle}
+//                     inputSearchStyle={styles.inputSearchStyle}
+//                     iconStyle={styles.iconStyle}
+//                     data={data2}
+//                     search
+//                     maxHeight={300}
+//                     labelField="label1"
+//                     valueField="value"
+//                     placeholder="Pincode"
+//                     value={pin}
+//                     itemTextStyle={{ color: 'black' }}
+//                     onChange={item => {
+//                         setPin(item.value);
+//                     }}
+//                 />
+//                 <Dropdown
+//                     style={styles.dropdown}
+//                     placeholderStyle={styles.placeholderStyle}
+//                     selectedTextStyle={styles.selectedTextStyle}
+//                     iconStyle={styles.iconStyle}
+//                     data={vehicleData}
+//                     maxHeight={300}
+//                     labelField="label1"
+//                     valueField="value"
+//                     placeholder="Vehical Type"
+//                     value={vehicle}
+//                     itemTextStyle={{ color: 'black' }}
+//                     onChange={item => {
+//                         setVehicle(item.value);
+//                     }}
+//                 />
+//                 <TouchableOpacity onPress={() => setOpenTime(true)} >
+//                     <Text style={[styles.textnamee]}>{showTime ? "Time" : <Text style={styles.textname}>{time.toLocaleTimeString()}</Text>}</Text>
+//                 </TouchableOpacity>
+//                 <DatePicker
+//                     mode="time"
+//                     modal
+//                     open={openTime}
+//                     date={time}
+//                     onConfirm={(date) => {
+//                         setOpenTime(false)
+//                         setTime(date)
+//                         setShowTime(false)
+//                         // console.log(date);
+//                     }}
+//                     onCancel={() => {
+//                         setOpenTime(false)
+//                     }}/>
+
+//                 <View style={styles.button1}>
+//                     <TouchableOpacity style={styles.button}>
+//                     {/* onPress={() => navigation.navigate('WelToRide')} */}
+//                         <Text style={styles.btnText}>Next</Text>
+//                     </TouchableOpacity>
+//                 </View>
+//             </View>
+//         </View>
+//     </>
+//     )
+// }
+
+
+// const styles = StyleSheet.create({
+//     container: {
+//         flex: 5,
+//         backgroundColor: 'white',
+//     },
+//     dropdown: {
+//         color: 'black',
+//         fontSize: 16,
+//         paddingHorizontal: horizontalScale(20),
+//         paddingVertical: verticalScale(5),
+//         borderColor: '#898989',
+//         borderRadius: 10,
+//         borderWidth: 1,
+//         marginHorizontal: horizontalScale(20),
+//         marginVertical: verticalScale(12),
+
+//     },
+//     icon: {
+//         marginRight: 5,
+//         color: '#898989',
+
+//     },
+//     placeholderStyle: {
+//         fontSize: 16,
+//         color: '#898989',
+
+//     },
+//     selectedTextStyle: {
+//         fontSize: 16,
+//         color: '#0D0F17',
+//     },
+//     iconStyle: {
+//         width: 20,
+//         height: 20,
+//     },
+//     inputSearchStyle: {
+//         height: 40,
+//         fontSize: 16,
+//         color: '#0D0F17',
+//     },
+//     subcontainer1: {
+//         alignItems: 'center',
+//         // margin: 30,
+//         marginTop:verticalScale(20)
+//     },
+//     text: {
+//         color: '#0D0F17',
+//         fontSize: 22,
+//         fontFamily: 'Semibold'
+
+//     },
+//     btnText: {
+//         color: '#FFFFFF',
+//         fontWeight: 800,
+//         fontSize: 22,
+//         fontFamily: 'Poppins-SemiBold'
+//     },
+//     textname: {
+//         color: 'black',
+//         fontSize: 16,
+//         paddingHorizontal: horizontalScale(20),
+//         paddingVertical: verticalScale(10),
+//         borderColor: '#898989',
+//         borderRadius: 10,
+//         borderWidth: 1,
+//         marginHorizontal: horizontalScale(20),
+//         marginVertical: verticalScale(12),
+//         marginTop:verticalScale(20)
+//     },
+//     textnamee: {
+//         color: '#868686',
+//         fontSize: 16,
+//         paddingHorizontal: horizontalScale(20),
+//         paddingVertical: verticalScale(14),
+//         borderColor: '#898989',
+//         borderRadius: 10,
+//         borderWidth: 1,
+//         marginHorizontal: horizontalScale(20),
+//         marginVertical: verticalScale(12),
+//     },
+
+//     button: {
+//         // alignItems: 'center',
+//         // backgroundColor: '#194AF9',
+//         // marginHorizontal: horizontalScale(25),
+//         // paddingHorizontal: horizontalScale(25),
+//         // paddingVertical: 15,
+//         // borderRadius: 90,
+//         // marginHorizontal: 15,
+//         marginTop: 90,
+//         alignItems: 'center',
+//         justifyContent: 'center',
+//         backgroundColor: '#194AF9',
+//         borderRadius: 90,
+//         height: verticalScale(60),
+//         width: horizontalScale(320),
+//     },
+//     boxtext: {
+//         borderWidth: 1,
+//         fontSize: 20,
+//         borderRadius: 10,
+//         borderColor: '#B6B6B6',
+//         marginTop: 20,
+//         // padding: 10,
+//         color: '#898989',
+//     },
+//     bold: {
+//         color: '#000'
+//     },
+//     button1: {
+//         alignItems: 'center',
+//     },
+// })
+
 import { View, Text, Button, TouchableOpacity, StyleSheet, TextInput } from 'react-native'
 import React, { useState } from 'react'
 import DatePicker from 'react-native-date-picker'
 import { Dropdown } from 'react-native-element-dropdown';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { horizontalScale, verticalScale } from '../helper/ Metrics';
 
 
-export default function Extra({navigation}) {
+
+export default function Extra() {
+    const [err, setErr] = useState('');
     const [date, setDate] = useState(new Date())
+    const [tdate, setTdate] = useState(new Date())
     const [time, setTime] = useState(new Date())
 
     const [open, setOpen] = useState(false)
@@ -30,7 +303,6 @@ export default function Extra({navigation}) {
 
         { label1: '395006', value: '1' },
         { label1: '395010', value: '2' },
-        { label1: '395004', value: '3' }
 
     ];// keyboardType = 'numeric'
 
@@ -46,111 +318,134 @@ export default function Extra({navigation}) {
 
     ];// keyboardType = 'numeric'
 
+    const checkData = () => {
+        let d  = new Date(date);
+
+        if ((new Date().getFullYear()  - d.getFullYear()) < 18) {
+            setErr("You are under 18.")
+        } else {
+            setErr("")
+        }
+    }
+
     const [vehicle, setVehicle] = useState(null);
     return (
-<>
-    <View style={styles.container}>
-        <View style={styles.subcontainer1}>
-            {/* <Text style={styles.text}>Driver Information</Text> */}
-        </View>
-        <View>
-            <TextInput placeholder='First Name' placeholderTextColor={'#898989'} style={styles.textname} />
-            <TextInput placeholder='Last Name' placeholderTextColor={'#898989'} style={styles.textname} />
-            <TouchableOpacity onPress={() => setOpen(true)} >
-                <Text style={[styles.textnamee]}>{show ? "DOB" : <Text style={styles.textname}>{date.toDateString()}</Text>}</Text>
-            </TouchableOpacity>
-                <DatePicker
-                    mode="date"
-                    modal
-                    open={open}
-                    date={date}
-                    onConfirm={(date) => {
-                        setOpen(false)
-                        setDate(date)
-                        setShow(false)
+        < >
+            <View style={styles.container}>
+                <View style={styles.subcontainer1}>
+                    {/* <Text style={styles.text}>Driver Information</Text> */}
+                </View>
+                <View>
+                    <TextInput placeholder='First Name' placeholderTextColor={'#898989'} style={styles.textname} />
+
+                    <TextInput placeholder='Last Name' placeholderTextColor={'#898989'} style={styles.textname} />
+
+                    <TouchableOpacity onPress={() => setOpen(true)} >
+                        <Text style={[styles.textnamee]}>{show ? "DOB" : <Text style={styles.textname}>{date.toDateString()}</Text>}</Text>
+
+
+
+                    </TouchableOpacity>
+                    <DatePicker
+                        mode="date"
+                        modal
+                        open={open}
+                        date={date}
+                        maximumDate={tdate}
+                        onConfirm={(date) => {
+                            setOpen(false)
+                            setDate(date)
+                            setShow(false)
                             // console.log(date);
-                    }}
-                    onCancel={() => {
-                        setOpen(false)
-                    }} />
+                        }}
+                        onCancel={() => {
+                            setOpen(false)
+                        }} />
 
-                <Dropdown
-                    style={styles.dropdown}
-                    placeholderStyle={styles.placeholderStyle}
-                    selectedTextStyle={styles.selectedTextStyle}
-                    iconStyle={styles.iconStyle}
-                    data={data1}
-                    maxHeight={300}
-                    labelField="label1"
-                    valueField="value"
-                    placeholder="Gender"
-                    value={value}
-                    itemTextStyle={{ color: 'black' }}
-                    onChange={item => {
-                        setValue(item.value);
-                    }}
-                />
-                <Dropdown
-                    style={styles.dropdown}
-                    placeholderStyle={styles.placeholderStyle}
-                    selectedTextStyle={styles.selectedTextStyle}
-                    inputSearchStyle={styles.inputSearchStyle}
-                    iconStyle={styles.iconStyle}
-                    data={data2}
-                    search
-                    maxHeight={300}
-                    labelField="label1"
-                    valueField="value"
-                    placeholder="Pincode"
-                    value={pin}
-                    itemTextStyle={{ color: 'black' }}
-                    onChange={item => {
-                        setPin(item.value);
-                    }}
-                />
-                <Dropdown
-                    style={styles.dropdown}
-                    placeholderStyle={styles.placeholderStyle}
-                    selectedTextStyle={styles.selectedTextStyle}
-                    iconStyle={styles.iconStyle}
-                    data={vehicleData}
-                    maxHeight={300}
-                    labelField="label1"
-                    valueField="value"
-                    placeholder="Vehical Type"
-                    value={vehicle}
-                    itemTextStyle={{ color: 'black' }}
-                    onChange={item => {
-                        setVehicle(item.value);
-                    }}
-                />
-                <TouchableOpacity onPress={() => setOpenTime(true)} >
-                    <Text style={[styles.textnamee]}>{showTime ? "Time" : <Text style={styles.textname}>{time.toLocaleTimeString()}</Text>}</Text>
-                </TouchableOpacity>
-                <DatePicker
-                    mode="time"
-                    modal
-                    open={openTime}
-                    date={time}
-                    onConfirm={(date) => {
-                        setOpenTime(false)
-                        setTime(date)
-                        setShowTime(false)
-                        // console.log(date);
-                    }}
-                    onCancel={() => {
-                        setOpenTime(false)
-                    }}/>
+                        <Text style={{color: 'red'}}>{err}</Text>
 
-                <View style={styles.button1}>
-                    <TouchableOpacity style={styles.button}>
-                    {/* onPress={() => navigation.navigate('WelToRide')} */}
+                    <Dropdown
+                        style={styles.dropdown}
+                        placeholderStyle={styles.placeholderStyle}
+                        selectedTextStyle={styles.selectedTextStyle}
+                        iconStyle={styles.iconStyle}
+                        data={data1}
+                        maxHeight={300}
+                        labelField="label1"
+                        valueField="value"
+                        placeholder="Gender"
+                        value={value}
+                        itemTextStyle={{ color: 'black' }}
+                        onChange={item => {
+                            setValue(item.value);
+                        }}
+
+
+                    />
+                    <Dropdown
+                        style={styles.dropdown}
+                        placeholderStyle={styles.placeholderStyle}
+                        selectedTextStyle={styles.selectedTextStyle}
+                        inputSearchStyle={styles.inputSearchStyle}
+                        iconStyle={styles.iconStyle}
+                        data={data2}
+                        search
+                        maxHeight={300}
+                        labelField="label1"
+                        valueField="value"
+                        placeholder="Pincode"
+                        value={pin}
+                        itemTextStyle={{ color: 'black' }}
+                        onChange={item => {
+                            setPin(item.value);
+                        }}
+
+
+
+                    />
+                    <Dropdown
+                        style={styles.dropdown}
+                        placeholderStyle={styles.placeholderStyle}
+                        selectedTextStyle={styles.selectedTextStyle}
+                        iconStyle={styles.iconStyle}
+                        data={vehicleData}
+                        maxHeight={300}
+                        labelField="label1"
+                        valueField="value"
+                        placeholder="Vehical Type"
+                        value={vehicle}
+                        itemTextStyle={{ color: 'black' }}
+                        onChange={item => {
+                            setVehicle(item.value);
+                        }}
+
+
+
+                    />
+                    <TouchableOpacity onPress={() => setOpenTime(true)} >
+                        <Text style={[styles.textnamee]}>{showTime ? "Time" : <Text style={styles.textname}>{time.toLocaleTimeString()}</Text>}</Text>
+                    </TouchableOpacity>
+                    <DatePicker
+                        mode="time"
+                        modal
+                        open={openTime}
+                        date={time}
+                        onConfirm={(date) => {
+                            setOpenTime(false)
+                            setTime(date)
+                            setShowTime(false)
+                            // console.log(date);
+                        }}
+                        onCancel={() => {
+                            setOpenTime(false)
+                        }} />
+                    <TouchableOpacity style={styles.button} onPress={checkData}>
                         <Text style={styles.btnText}>Next</Text>
                     </TouchableOpacity>
                 </View>
             </View>
-        </View>
-    </>
+
+        </>
     )
 }
 
@@ -163,13 +458,13 @@ const styles = StyleSheet.create({
     dropdown: {
         color: 'black',
         fontSize: 16,
-        paddingHorizontal: horizontalScale(20),
-        paddingVertical: verticalScale(5),
+        paddingHorizontal: 20,
+        paddingVertical: 5,
         borderColor: '#898989',
         borderRadius: 10,
         borderWidth: 1,
-        marginHorizontal: horizontalScale(20),
-        marginVertical: verticalScale(12),
+        marginHorizontal: 20,
+        marginVertical: 10,
 
     },
     icon: {
@@ -189,6 +484,8 @@ const styles = StyleSheet.create({
     iconStyle: {
         width: 20,
         height: 20,
+
+
     },
     inputSearchStyle: {
         height: 40,
@@ -197,8 +494,7 @@ const styles = StyleSheet.create({
     },
     subcontainer1: {
         alignItems: 'center',
-        // margin: 30,
-        marginTop:verticalScale(20)
+        margin: 20,
     },
     text: {
         color: '#0D0F17',
@@ -215,42 +511,35 @@ const styles = StyleSheet.create({
     textname: {
         color: 'black',
         fontSize: 16,
-        paddingHorizontal: horizontalScale(20),
-        paddingVertical: verticalScale(10),
+        paddingHorizontal: 20,
+        paddingVertical: 10,
         borderColor: '#898989',
         borderRadius: 10,
         borderWidth: 1,
-        marginHorizontal: horizontalScale(20),
-        marginVertical: verticalScale(12),
-        marginTop:verticalScale(20)
+        marginHorizontal: 20,
+        marginVertical: 10,
     },
     textnamee: {
         color: '#868686',
         fontSize: 16,
-        paddingHorizontal: horizontalScale(20),
-        paddingVertical: verticalScale(14),
+        paddingHorizontal: 20,
+        paddingVertical: 10,
         borderColor: '#898989',
         borderRadius: 10,
         borderWidth: 1,
-        marginHorizontal: horizontalScale(20),
-        marginVertical: verticalScale(12),
+        marginHorizontal: 20,
+        marginVertical: 10,
     },
 
     button: {
-        // alignItems: 'center',
-        // backgroundColor: '#194AF9',
-        // marginHorizontal: horizontalScale(25),
-        // paddingHorizontal: horizontalScale(25),
-        // paddingVertical: 15,
-        // borderRadius: 90,
-        // marginHorizontal: 15,
-        marginTop: 90,
         alignItems: 'center',
-        justifyContent: 'center',
         backgroundColor: '#194AF9',
+        marginHorizontal: 25,
+        marginTop: 100,
+        paddingHorizontal: 25,
+        paddingVertical: 15,
         borderRadius: 90,
-        height: verticalScale(60),
-        width: horizontalScale(320),
+        marginHorizontal: 15,
     },
     boxtext: {
         borderWidth: 1,
@@ -258,13 +547,10 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderColor: '#B6B6B6',
         marginTop: 20,
-        // padding: 10,
+        padding: 10,
         color: '#898989',
     },
     bold: {
         color: '#000'
-    },
-    button1: {
-        alignItems: 'center',
-    },
+    }
 })
