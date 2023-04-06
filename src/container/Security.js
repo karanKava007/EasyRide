@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity,Linking } from 'react-native'
 import React from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -8,16 +8,16 @@ export default function Security({navigation}) {
     return (
         <View style={styles.container}>
             <View style={styles.heading}>
-                <Text style={styles.safety}>Safety</Text>
+                {/* <Text style={styles.safety}>Safety</Text> */}
             </View>
             <View style={styles.logo}>
-                <Image source={require('../../src/assets/image/group.png')} />
+                <Image source={require('../../src/assets/image/group.png')}/>
             </View>
             <View style={styles.text}>
                 <Text style={styles.contact}>Who Do You Want To Contact?</Text>
             </View>
             <View style={styles.button}>
-                <TouchableOpacity style={styles.btn}>
+                <TouchableOpacity style={styles.btn} onPress={() => { Linking.openURL('tel:108'); }}>
                     <View>
                         <Ionicons color="#898989" name="md-call" size={25} style={styles.icon1} />
                     </View>
@@ -28,7 +28,7 @@ export default function Security({navigation}) {
                         <AntDesign style={styles.icon} color="#898989" name="right" size={25} />
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.btn}>
+                <TouchableOpacity style={styles.btn}onPress={() => { Linking.openURL('tel:100'); }}>
                     <View>
                         <Ionicons color="#898989" name="md-call" size={25} style={styles.icon1} />
                     </View>

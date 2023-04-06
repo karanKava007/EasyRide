@@ -1,7 +1,17 @@
 import { View, Text, StyleSheet, TextInput,TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { horizontalScale, verticalScale } from '../helper/ Metrics';
+import { useDispatch, useSelector } from 'react-redux';
+import { verifyOTP } from '../redux/action/auth.action';
 export default function Otp1({navigation}) {
+    const Phoneauth = useSelector (state => state.auth)
+    const [code, setCode] = useState('');
+    const dispatch = useDispatch();
+
+    console.log('phoneData',Phoneauth);
+    const handleOTP = () => {
+        dispatch(verifyOTP(Phoneauth.confirm, code))
+    }
   return (
     <View style={Styles.container}>
         <View style={Styles.v1}>
@@ -9,14 +19,18 @@ export default function Otp1({navigation}) {
         </View>
         <View style={Styles.v2}>
             <Text style={Styles.t2}>Enter the verification code we just send on phone number</Text>
-            <View style={[Styles.v3,Styles.shadowProp]}>
-            <TextInput style={Styles.box}>1</TextInput>
-            <TextInput style={Styles.box}>2</TextInput>
-            <TextInput style={Styles.box}>3</TextInput>
-            <TextInput style={Styles.box}>4</TextInput>
+            <View style={Styles.v3}>
+                <TextInput maxLength={6} keyboardType='numeric' placeholder='OTP' placeholderTextColor={'#898989'} onChangeText={setCode} style={Styles.v4}></TextInput>
+            {/* <TextInput maxLength={1} keyboardType='numeric' style={Styles.box}>1</TextInput>
+            <TextInput maxLength={1} keyboardType='numeric' style={Styles.box}>2</TextInput>
+            <TextInput maxLength={1} keyboardType='numeric' style={Styles.box}>3</TextInput>
+            <TextInput maxLength={1} keyboardType='numeric' style={Styles.box}>4</TextInput>
+            <TextInput maxLength={1} keyboardType='numeric' style={Styles.box}>5</TextInput>
+            <TextInput maxLength={1} keyboardType='numeric' style={Styles.box}>6</TextInput>*/}
         </View>
         <View style={Styles.button}>
-                <TouchableOpacity style={Styles.btn} onPress={() => navigation.navigate('Permisionocation')}>
+                <TouchableOpacity style={Styles.btn} onPress={() => {handleOTP()}}>
+                {/* navigation.navigate('Permisionocation'); */}
                     <Text style={Styles.btntxt}>Verify</Text>
                 </TouchableOpacity>
         </View>
@@ -58,8 +72,8 @@ const Styles = StyleSheet.create({
         // backgroundColor:'red',
         alignContent:'center',
         justifyContent:'center',
-        height:'15%',
-        columnGap: 15,
+        height:'16%',
+        // columnGap: 10,
         borderColor:'black',
         marginTop:'10%',
     },
@@ -68,7 +82,7 @@ const Styles = StyleSheet.create({
         color:'black',
         borderWidth:1,
         borderRadius:20,
-        width:'20%',
+        width:'16%',
         textAlign:'center',
         fontSize:20,
         fontWeight:'900',
@@ -91,5 +105,10 @@ const Styles = StyleSheet.create({
         fontWeight:600,
         justifyContent:'center',
         color:'white',
+    },
+    v4:{
+        color:'black',
+        fontSize:22,
+        fontFamily:'Poppins-SemiBold',
     }
 })

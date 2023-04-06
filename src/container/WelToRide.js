@@ -2,6 +2,8 @@ import { Text, View, StyleSheet, TextInput, TouchableOpacity, Button } from 'rea
 import React, { useState } from 'react';
 import DatePicker from 'react-native-date-picker';
 import { horizontalScale, verticalScale } from '../helper/ Metrics';
+import { postUserInfo } from '../redux/action/userReg.action';
+import { useDispatch } from 'react-redux';
 // import DatePicker from 'react-native-datepicker'
 
 export default function WelToEasyRide({ navigation }) {
@@ -9,8 +11,21 @@ export default function WelToEasyRide({ navigation }) {
     const [tDate, setTDate] = useState(new Date())
     const [open, setOpen] = useState(false)
     const [show, setShow] = useState(true)
-    const [password, setPassword] = useState('');
-    var moment = require('moment');
+    const [firstName, setFirstName] = useState()
+    const [lastName, setLastName] = useState()
+    const [email, setEmail] = useState()
+    const dispatch = useDispatch()
+
+
+    const addData = () => {
+        let data = {
+            firstName: firstName,
+            lastName: lastName,
+            email:email,
+            dob: date,
+        }
+        dispatch(postUserInfo(data))
+    }
     return (
 
         <View style={styles.container}>
@@ -19,15 +34,13 @@ export default function WelToEasyRide({ navigation }) {
                 <Text style={styles.h3}>Let's Get acquainted</Text>
             </View>
             <View>
-                <TextInput placeholder='First_Name' style={styles.box} placeholderTextColor="#898989"/>
-                <TextInput placeholder="Last_Name" style={styles.box} placeholderTextColor="#898989"/>
-
-                {/* <TextInput placeholder='DOB' style={styles.box} placeholderTextColor="#898989" onPress={() => setOpen(true)}></TextInput> */}
-                {/* <Button title="DOB" onPress={() => setOpen(true)} style={styles.box}  /> */}
+                <TextInput placeholder='First_Name' style={styles.box} value={firstName} onChangeText={setFirstName} placeholderTextColor="#898989" />
+                <TextInput placeholder="Last_Name" style={styles.box} value={lastName} onChangeText={setLastName} placeholderTextColor="#898989" />
+                <TextInput placeholder="E-Mail" keyboardType='email-address' style={styles.box} value={email} onChangeText={setEmail} placeholderTextColor="#898989" />
                 <TouchableOpacity onPress={() => setOpen(true)}>
                     <Text style={[styles.box]}>{show ? <Text style={styles.text}> DOB </Text> : <Text style={styles.boxtext1}>{date.toDateString()}</Text>}</Text>
-                    {/* <Text style={styles.boxtext} >DOB</Text> */}
                 </TouchableOpacity>
+
                 <DatePicker
                     mode="date"
                     modal
@@ -39,33 +52,14 @@ export default function WelToEasyRide({ navigation }) {
                         setOpen(false)
                         setDate(date)
                         setShow(false)
-                        // console.log(date);
                     }}
                     onCancel={() => {
                         setOpen(false)
                     }} />
-                {/* <DatePicker
-                    style={{ width: 200, }}
-                    date={date}
-                    mode="date"
-                    showIcon={false}
-                    // placeholder={dob}
-                    format="YYYY-MM-DD"
-                    minDate="1950-01-01"
-                    maxDate={moment().subtract(18, 'years').format('YYYY-MM-DD')}
-                    confirmBtnText="Confirm"
-                    cancelBtnText="Cancel"
-                    customStyles={{
-                        dateInput: {
-                            marginLeft: -76, borderWidth: 0, color: 'black'
-                        }
-                    }}
-                    onDateChange={(date) => {date: date }}
-                /> */}
             </View>
 
             <View style={styles.buttonSection}>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Dashbord')}>
+                <TouchableOpacity style={styles.button} onPress={() => { addData(); navigation.navigate('Dashbord'); }}>
                     <Text style={styles.btnText}>Get Started</Text>
                 </TouchableOpacity>
             </View>

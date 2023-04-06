@@ -5,7 +5,7 @@ export default function FAQD() {
     return (
         <View style={styles.container}>
             <View style={styles.subcontainer1}>
-                <Text style={styles.sub1Text}>FAQ</Text>
+                {/* <Text style={styles.sub1Text}>FAQ</Text> */}
             </View>
             <View style={styles.subcontainer2}>
                 <Text style={styles.sub2Text}>Drivers do not respond</Text>

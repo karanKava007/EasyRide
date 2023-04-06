@@ -1,9 +1,66 @@
 import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { horizontalScale, verticalScale } from '../helper/ Metrics'
 import { ScrollView } from 'react-native-gesture-handler'
+import { useDispatch, useSelector } from 'react-redux'
+import { postUserInfo, putUserInfo } from '../redux/action/userReg.action'
+import DatePicker from 'react-native-date-picker'
 
-export default function Profile({navigation}) {
+export default function Profile({ navigation }) {
+  const [id, setId] = useState()
+  const [date, setDate] = useState(new Date())
+  const [tDate, setTDate] = useState(new Date())
+  const [open, setOpen] = useState(false)
+  const [show, setShow] = useState(true)
+  const [firstName, setFirstName] = useState()
+  const [lastName, setLastName] = useState()
+  const [email, setEmail] = useState()
+  const [dob, setDob] = useState()
+  const [agee, setAgee] = useState()
+  const dispatch = useDispatch()
+  const userInfo = useSelector(state => state.userReducer)
+  // console.log(userInfo);
+  
+  const addData = () => {
+    let data = {
+      id: id,
+      firstName: firstName,
+      lastName: lastName,
+      dob: date,
+      email: email,
+    }
+    dispatch(postUserInfo(data))
+  }
+
+  useEffect(() => {
+    countAge()
+    setId(userInfo.user.id)
+    setFirstName(userInfo.user.firstName)
+    setLastName(userInfo.user.lastName)
+    setDob(userInfo.user.dob.getFullYear() + "/" + (userInfo.user.dob.getMonth() + 1) + "/" + userInfo.user.dob.getDate())
+    setEmail(userInfo.user.email)
+  }, [])
+
+  const UpdateUser = () => {
+    let upUser = {
+      id: id,
+      firstName: firstName,
+      lastName: lastName,
+      dob: date,
+      email: email,
+    }
+    dispatch(putUserInfo(upUser))
+  }
+
+  const countAge = () => {
+    const birthDate = new Date(userInfo.user.dob.getFullYear() + "-" + (userInfo.user.dob.getMonth() + 1) + "-" + userInfo.user.dob.getDate()); // Replace with the actual birth date
+    const ageDifMs = Date.now() - birthDate.getTime();
+    const ageDate = new Date(ageDifMs); // miliseconds from epoch
+    const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+    setAgee(age);
+    // console.log(age); // Output: 33 (if current year is 2023)
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.container1}>
@@ -13,23 +70,45 @@ export default function Profile({navigation}) {
           <Image style={styles.img} source={require('../../src/assets/image/Ellipse6.png')} />
           {/* <Text style={styles.text2}>John Doe</Text> */}
           <View style={styles.textinput}>
-            <Text style={styles.text2}>Full Name:</Text>
-            <TextInput placeholder="John" style={styles.h1} placeholderTextColor="black" />
+            <Text style={styles.text2}>First Name:</Text>
+            <TextInput value={firstName} onChangeText={setFirstName} placeholder="John" style={styles.h1} placeholderTextColor="black" />
+          </View>
+          <View style={styles.textinput}>
+            <Text style={styles.text2}>Last Name:</Text>
+            <TextInput value={lastName} onChangeText={setLastName} placeholder="John" style={styles.h1} placeholderTextColor="black" />
+          </View>
+          <View style={styles.textinput}>
+            <Text style={styles.text2}>E-Mail:</Text>
+            <TextInput placeholder="John004@gmail.com" value={email} onChangeText={setEmail} style={styles.h1} placeholderTextColor="black" />
+          </View>
+          <View style={styles.textinput}>
+            <Text style={styles.text2}>Date Of Birth:</Text>
+            <TouchableOpacity onPress={() => setOpen(true)}>
+              {/* <Text style={[styles.box]}>{show ? <Text style={styles.text}> DOB </Text> : <Text style={styles.boxtext1}>{date.toDateString()}</Text>}</Text> */}
+              <Text style={styles.h2} onChangeText={setDob}>{dob}</Text>
+            </TouchableOpacity>
+
+            <DatePicker
+              mode="date"
+              modal
+              open={open}
+              date={date}
+              maximumDate={tDate}
+              onConfirm={(date) => {
+                setOpen(false)
+                setDate(date)
+                setShow(false)
+                setDob(date.toDateString())
+                countAge()
+              }}
+              onCancel={() => {
+                setOpen(false)
+              }} />
           </View>
 
           <View style={styles.textinput}>
             <Text style={styles.text2}>Age:</Text>
-            <TextInput placeholder="18" style={styles.h1} placeholderTextColor="black" />
-          </View>
-
-          <View style={styles.textinput}>
-            <Text style={styles.text2}>Date Of Birth:</Text>
-            <TextInput placeholder="26-11-2004" style={styles.h1} placeholderTextColor="black" />
-          </View>
-
-          <View style={styles.textinput}>
-            <Text style={styles.text2}>E-Mail:</Text>
-            <TextInput placeholder="John004@gmail.com" style={styles.h1} placeholderTextColor="black" />
+            <Text style={styles.h2}>{agee}</Text>
           </View>
 
           <View style={styles.textinput}>
@@ -37,7 +116,7 @@ export default function Profile({navigation}) {
             <TextInput placeholder="+91 99734-89210" style={styles.h1} placeholderTextColor="black" />
           </View>
           <View style={styles.btn}>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={() => { UpdateUser(); countAge(); }}>
               {/* <Text>onPress={() => navigation.navigate('Otp1')}</Text> */}
               <Text style={styles.btntxt}>Save</Text>
             </TouchableOpacity>
@@ -80,8 +159,8 @@ const styles = StyleSheet.create({
     // shadowOpacity: 0.9,
     elevation: 5,
     // shadowRadius: 20,
-    borderRadius:8,
-    padding:horizontalScale(15) && verticalScale(20),
+    borderRadius: 8,
+    padding: horizontalScale(15) && verticalScale(20),
   },
   img: {
     marginTop: verticalScale(20),
@@ -100,7 +179,7 @@ const styles = StyleSheet.create({
     // flex:5,
     height: '10%',
     width: '90%',
-    marginTop: '5%',
+    marginTop: '3%',
     // flexDirection:'row',
     // backgroundColor:'green',
     borderBottomWidth: 1,
@@ -116,6 +195,13 @@ const styles = StyleSheet.create({
     color: 'black',
     fontFamily: 'Poppins-Regular',
     fontSize: 15,
+  },
+  h2: {
+    color: 'black',
+    fontFamily: 'Poppins-Regular',
+    fontSize: 15,
+    marginTop: verticalScale(15),
+    marginHorizontal: horizontalScale(5),
   },
   btn: {
     marginTop: '10%',
