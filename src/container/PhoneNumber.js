@@ -5,60 +5,83 @@ import Flag from 'react-native-flags';
 import { horizontalScale, verticalScale } from '../helper/ Metrics';
 import { useDispatch } from 'react-redux';
 import { ConfirmPhoneAuth } from '../redux/action/auth.action';
+import { object, string, number, date, InferType } from 'yup';
+import { Form, Formik, useFormik } from 'formik';
+
 // import  Icon  from '@iconify/react';
 
-export default function PhoneNumber({navigation}) {
+export default function PhoneNumber({ navigation }) {
     const dispatch = useDispatch()
-    const [phone,setPhone]=useState('')
-    const handlePhone = () =>{
-        dispatch(ConfirmPhoneAuth(phone))
-    }
+
+    const phoneRegExp = /^[0-9]{10}$/;
+    let userSchema = object({
+        phoneNo: string()
+            .required("required")
+            .matches(phoneRegExp, "Invalid Number!!")
+    });
+
     // <Text>{navigation}</Text>
     return (
-        <View style={styles.container}>
-            <View style={styles.heading}>
-                <Text style={styles.title}>Join Us Via Phone Number</Text>
-            </View>
-            <View style={styles.information}>
-                <View style={styles.icon}>
-                    <Flag code="IN" size={32} style={styles.flag} />
-                    {/* <Icon name="twemoji:flag-india" size={22}/> */}
-                    <Icon style={styles.createdown} name="caret-down" size={22} />
-                    <Text style={styles.number}>+91</Text>
-                    <TextInput style={styles.input} maxLength={10} keyboardType='numeric' placeholder="Enter Your Phone Number" onChangeText={setPhone} placeholderTextColor="#989898">
-                    </TextInput>
-                </View>
-                <View style={styles.btn}>
-                    <TouchableOpacity style={styles.button} onPress={() => {handlePhone();navigation.navigate('Otp1');}}>
-                        {/* <Text>onPress={() => navigation.navigate('Otp1')}</Text> */}
-                        <Text style={styles.btntxt}>Next</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-
-            <View style={styles.Termcondition}> 
-                <Text style={styles.condition}>By tapping "Next" you agree to Terms and Conditions and Privacy Policy</Text> 
-            </View>
-        </View >
+        <Formik
+            validationSchema={userSchema}
+            initialValues={{ phoneNo: '' }}
+            onSubmit={values => { dispatch(ConfirmPhoneAuth(values.phoneNo)); navigation.navigate('Otp1'); }}
+        >
+            {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                values,
+                errors,
+                isValid,
+                touched,
+            }) => (
+                <>
+                    <View style={styles.container}>
+                        <View style={styles.heading}>
+                            <Text style={styles.title}>Join Us Via Phone Number</Text>
+                        </View>
+                        <View style={styles.information}>
+                            <View style={styles.icon}>
+                                <Flag code="IN" size={32} style={styles.flag} />
+                                {/* <Icon name="twemoji:flag-india" size={22}/> */}
+                                <Icon style={styles.createdown} name="caret-down" size={22} />
+                                <Text style={styles.number}>+91</Text>
+                                <TextInput style={styles.input} maxLength={20} name='phoneNo' keyboardType='phone-pad' placeholder="Enter Your Phone Number" onChangeText={handleChange('phoneNo')} placeholderTextColor="#989898" />
+                            </View>
+                            <View style={styles.btn}>
+                                <Text style={styles.validation}>{errors.phoneNo != '' && touched.phoneNo ? errors.phoneNo : ''}</Text>
+                                <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                                    <Text style={styles.btntxt}>Next</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        <View style={styles.Termcondition}>
+                            <Text style={styles.condition}>By tapping "Next" you agree to Terms and Conditions and Privacy Policy</Text>
+                        </View>
+                    </View >
+                </>
+            )
+            }
+        </Formik >
     )
 }
 
+
 const styles = StyleSheet.create({
     container: {
-        // backgroundColor: 'red',
         flex: 1,
         backgroundColor: 'white',
-        padding: '3%',
+        padding: verticalScale(25) && horizontalScale(25)
     },
     heading: {
         flex: 1,
-        // backgroundColor: 'lightgreen',
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
         height: '100%',
         justifyContent: 'flex-end',
-        paddingBottom: '15%'
+        paddingBottom: verticalScale(50) && horizontalScale(50),
     },
     title: {
         fontSize: 22,
@@ -67,77 +90,76 @@ const styles = StyleSheet.create({
     },
     information: {
         flex: 5,
-        // backgroundColor: 'lightpink',
         width: '100%',
         height: '100%',
-        rowGap: 40
+        rowGap: 30
     },
     icon: {
         width: '100%',
         flexDirection: 'row',
-        columnGap: 5,
+        columnGap: 2,
         textAlign: 'center',
         justifyContent: 'center',
         justifyContent: 'space-evenly',
     },
     createdown: {
-        marginTop: '4%',
+        marginTop: verticalScale(14) && horizontalScale(14),
         color: 'black',
     },
-    flag:{
-        marginTop:'3%',
+    flag: {
+        marginTop: verticalScale(10) && horizontalScale(10),
     },
     number: {
-        marginTop: '5%',
+        marginTop: verticalScale(16) && horizontalScale(15),
         color: '#000',
     },
     input: {
         borderBottomWidth: 1,
         borderColor: '#B6B6B6',
         color: 'black',
-        width: '60%',
-        // marginTop:'-1%',
-        paddingBottom:2,
+        width: '70%',
+        paddingBottom: 2,
+        fontSize: 15,
     },
     btn: {
-        // justifyContent: 'flex-end',
-        // width: '100%',
         flex: 3,
         alignItems: 'center',
-        paddingTop: '4%',
-        // backgroundColor: 'lightblue',
     },
     button: {
         backgroundColor: '#194AF9',
-        // width: '80%',
-        // height: '14%',
-        width:horizontalScale(290),
-        height:verticalScale(55),
-        // paddingTop: '2.8%',
-        borderRadius: 30,
+        width: verticalScale(290) && horizontalScale(290),
+        height: horizontalScale(55) && verticalScale(55),
+        borderRadius: verticalScale(30) && horizontalScale(30),
         justifyContent: 'center',
         alignItems: 'center',
     },
     btntxt: {
         color: '#FFF',
         fontWeight: '600',
-        fontSize: 19
+        fontSize: 19,
+        fontFamily: 'Poppins-SemiBold',
     },
     Termcondition: {
-        // backgroundColor: 'lightpink',
         width: '100%',
-        flex: 1,
-        justifyContent: 'flex-end',
+        // flex: 1,
+        // justifyContent: 'flex-end',
         alignItems: 'center',
+        marginVertical:verticalScale(-15),
     },
     condition: {
         width: '100%',
         textAlign: 'center',
         fontSize: 12,
         fontWeight: '400',
-        paddingBottom: '6%',
         color: '#898989',
     },
-
+    validation: {
+        color: 'red',
+        textAlign: 'center',
+        fontSize: 15,
+        fontFamily: 'Poppins-SemiBold',
+        marginTop:verticalScale(-25)
+    },
 
 })
+

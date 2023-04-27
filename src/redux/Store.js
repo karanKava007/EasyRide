@@ -7,7 +7,7 @@ import { rootReducer } from '../redux/reducer'
 const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
-    whitelist: ['auth'] // only navigation will be persisted
+    whitelist: ['auth','DivReducer','userReducer'] // only navigation will be persisted
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

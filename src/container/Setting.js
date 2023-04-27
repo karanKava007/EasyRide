@@ -5,16 +5,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logOutUser } from '../redux/action/auth.action';
 import { StackActions, useNavigation } from '@react-navigation/native';
 
-export default function Setting() {
-    const userData = useSelector(state => state.auth)
+export default function Setting({ navigation }) {
     const dispatch = useDispatch()
-    const navigation = useNavigation();
     const handleLogOut = () => {
         // navigation.reset()
         // navigation.reset({
         //     index: 0,
         //     routes: [{ name: 'Spl' }],
         // });
+        navigation.navigate('Spl1')
         dispatch(logOutUser())
     }
     return (
@@ -28,7 +27,7 @@ export default function Setting() {
                     <AntDesign style={styles.icon} name='right' />
                     <View>
                         <Text style={styles.text1}>Phone Number</Text>
-                        <Text style={styles.textt}>+9100000000</Text>
+                        <Text style={styles.textt}>6666666666</Text>
                     </View>
                 </TouchableOpacity>
 
@@ -40,7 +39,7 @@ export default function Setting() {
                     </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => { Linking.openURL('https://cabsindia.com/terms-and-conditions/') }}>
+                <TouchableOpacity onPress={() => { Linking.openURL('https://quickride.in/taxidriver/terms.html') }}>
                     <AntDesign style={styles.icon2} name='right' />
                     <Text style={styles.condition}>Terms & Conditions</Text>
                 </TouchableOpacity>

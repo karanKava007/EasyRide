@@ -1,9 +1,14 @@
-import { Text, View, StyleSheet, TextInput, TouchableOpacity, Button } from 'react-native';
-import React, { useState } from 'react';
+import { Text, View, StyleSheet, TextInput, TouchableOpacity, Button, Dimensions, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-native-date-picker';
-import { horizontalScale, verticalScale } from '../helper/ Metrics';
-import { postUserInfo } from '../redux/action/userReg.action';
-import { useDispatch } from 'react-redux';
+import { horizontalScale, moderateScale, verticalScale } from '../helper/ Metrics';
+import { getUserLive, postUserInfo } from '../redux/action/user.action';
+import { useDispatch, useSelector } from 'react-redux';
+import { object, string, number, date, InferType } from 'yup';
+import { Form, Formik, useFormik } from 'formik';
+import * as Yup from "yup";
+import ImageCropPicker from 'react-native-image-crop-picker';
+import { ScrollView } from 'react-native-gesture-handler';
 // import DatePicker from 'react-native-datepicker'
 
 export default function WelToEasyRide({ navigation }) {
@@ -11,103 +16,178 @@ export default function WelToEasyRide({ navigation }) {
     const [tDate, setTDate] = useState(new Date())
     const [open, setOpen] = useState(false)
     const [show, setShow] = useState(true)
-    const [firstName, setFirstName] = useState()
-    const [lastName, setLastName] = useState()
-    const [email, setEmail] = useState()
+    const [agee, setAgee] = useState()
+    const [imagePath, setImagePath] = useState('')
+    const userUid = useSelector(state => state.auth)
+
     const dispatch = useDispatch()
-
-
-    const addData = () => {
-        let data = {
-            firstName: firstName,
-            lastName: lastName,
-            email:email,
-            dob: date,
-        }
-        dispatch(postUserInfo(data))
+    const countAge = () => {
+        const birthDate = new Date(date);
+        const ageDifMs = Date.now() - birthDate.getTime();
+        const ageDate = new Date(ageDifMs);
+        const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+        setAgee(age);
     }
+
+    // const addData = () => {
+    //     let data = {
+    //         firstName: firstName,
+    //         lastName: lastName,
+    //         email: email,
+    //         dob: date,
+    //     }
+    //     dispatch(postUserInfo(data))
+    // }
+    useEffect(() => {
+        dispatch(getUserLive())
+    }, [])
+    let userSchema = object({
+        fname: string().trim().matches(/[abcdefghijklmnopqrstuvwxyz]+/, 'Is not in correct format').required('Please Enter First Name'),
+        lname: string().trim().matches(/[abcdefghijklmnopqrstuvwxyz]+/, 'Is not in correct format').required('Please Enter Last Name'),
+        dob: string().required('Please Enter Date Of Birth'),
+        email: string().required('Please Enter Email').email('Please Enter Email'),
+        image: Yup.mixed().required('Please Upload Your Image')
+    });
     return (
+        <Formik
+            validationSchema={userSchema}
+            initialValues={{ fname: '', lname: '', dob: '', email: '', image: '' }}
+            onSubmit={(values, { resetForm }) => {
+                dispatch(postUserInfo(
+                    {
+                        firstName: values.fname,
+                        lastName: values.lname,
+                        email: values.email,
+                        dob: values.dob,
+                        age: agee,
+                        uid: userUid.user.uid,
+                        phoneNumber: userUid.user.phoneNumber,
+                        image: imagePath,
+                        userType:'user',
+                    }));
+                    // navigation.navigate('Dashbord');    
+                console.log('fffffffffffffffffffffffffffffff',values);
+                resetForm();
+            }}
+        >
+            {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                values,
+                errors,
+                isValid,
+                touched,
+                setFieldValue
+            }) => (
+                <>
+                <ScrollView style={{backgroundColor:'white'}}>
+                    <View style={styles.container}>
+                        <View style={{ alignItems: 'center' }}>
+                            <Text style={styles.h2}>Welcome To Easy Ride!</Text>
+                            <Text style={styles.h3}>Let's Get acquainted</Text>
+                        </View>
+                        <View>
+                            <View style={styles.ProfileContainer}>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        ImageCropPicker.openPicker({
+                                            width: 300,
+                                            height: 400,
+                                            cropping: true
+                                        })
+                                            .then((image) => { setImagePath(image.path); setFieldValue("image", image.path) });
+                                    }} name='image'>
+                                    <View style={styles.subProfileContainer}>
+                                        <Image source={imagePath == '' ? require('../assets/image/user.png') : {uri: imagePath}} style={{ height: '100%', width: '100%' }} />
+                                    </View>
+                                </TouchableOpacity>
+                                <Text style={styles.validation}>{errors.image != '' && touched.image ? errors.image : ''}</Text>
+                            </View>
+                            <TextInput placeholder='First Name' style={styles.box} name='fname' onChangeText={handleChange('fname')} placeholderTextColor="#898989" />
+                            <Text style={styles.validation}>{errors.fname != '' && touched.fname ? errors.fname : ''}</Text>
+                            <TextInput placeholder="Last Name" style={styles.box} name='lname' onChangeText={handleChange('lname')} placeholderTextColor="#898989" />
+                            <Text style={styles.validation}>{errors.lname != '' && touched.lname ? errors.lname : ''}</Text>
+                            <TextInput placeholder="Email" keyboardType='email-address' style={styles.box} name='email' onChangeText={handleChange('email')} placeholderTextColor="#898989" />
+                            <Text style={styles.validation}>{errors.email != '' && touched.email ? errors.email : ''}</Text>
+                            <TouchableOpacity onPress={() => setOpen(true)}>
+                                <Text style={[styles.box]}>{show ? <Text style={styles.text}> DOB </Text> : <Text style={styles.boxtext1}>{date.toDateString()}</Text>}</Text>
+                            </TouchableOpacity>
 
-        <View style={styles.container}>
-            <View style={{ alignItems: 'center' }}>
-                <Text style={styles.h2}>Welcome To Easy Ride!</Text>
-                <Text style={styles.h3}>Let's Get acquainted</Text>
-            </View>
-            <View>
-                <TextInput placeholder='First_Name' style={styles.box} value={firstName} onChangeText={setFirstName} placeholderTextColor="#898989" />
-                <TextInput placeholder="Last_Name" style={styles.box} value={lastName} onChangeText={setLastName} placeholderTextColor="#898989" />
-                <TextInput placeholder="E-Mail" keyboardType='email-address' style={styles.box} value={email} onChangeText={setEmail} placeholderTextColor="#898989" />
-                <TouchableOpacity onPress={() => setOpen(true)}>
-                    <Text style={[styles.box]}>{show ? <Text style={styles.text}> DOB </Text> : <Text style={styles.boxtext1}>{date.toDateString()}</Text>}</Text>
-                </TouchableOpacity>
+                            <DatePicker
+                                mode="date"
+                                modal
+                                open={open}
+                                date={date}
+                                maximumDate={tDate}
+                                name='dob'
+                                onConfirm={(date) => {
+                                    setOpen(false)
+                                    setDate(date)
+                                    setShow(false)
+                                    setFieldValue("dob", date)
+                                }}
+                                onCancel={() => {
+                                    setOpen(false)
+                                }} />
+                            <Text style={styles.validation}>{errors.dob != '' && touched.dob ? errors.dob : ''}</Text>
+                        </View>
 
-                <DatePicker
-                    mode="date"
-                    modal
-                    open={open}
-                    date={date}
-                    maximumDate={tDate}
-
-                    onConfirm={(date) => {
-                        setOpen(false)
-                        setDate(date)
-                        setShow(false)
-                    }}
-                    onCancel={() => {
-                        setOpen(false)
-                    }} />
-            </View>
-
-            <View style={styles.buttonSection}>
-                <TouchableOpacity style={styles.button} onPress={() => { addData(); navigation.navigate('Dashbord'); }}>
-                    <Text style={styles.btnText}>Get Started</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
+                        <View style={styles.buttonSection}>
+                            <TouchableOpacity style={styles.button} onPress={() => { countAge(); handleSubmit() }}>
+                                <Text style={styles.btnText}>Get Started</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </ScrollView>
+                </>
+            )}
+        </Formik>
     )
 }
 
-
+// const { height, width } = Dimensions.get('window')
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#FFFFFF',
         flexDirection: 'column',
-        padding: 20,
+        // padding: 20,
+        padding: '5%',
 
     },
 
     h2: {
         // textAlign:'center',
         // fontWeight: 'bold',
-        fontSize: 25,
-        marginTop: 50,
+        fontSize: moderateScale(25),
+        marginTop: verticalScale(40),
         fontFamily: 'Poppins-SemiBold',
         color: '#0D0F17',
-
     },
 
     h3: {
-        marginTop: 6,
+        marginTop: verticalScale(6),
         fontFamily: 'Poppins',
-        fontSize: 17,
+        fontSize: moderateScale(17),
         color: '#898989',
-        marginBottom: 20
+        marginBottom: verticalScale(20),
     },
 
     box: {
         borderWidth: 1,
-        fontSize: 20,
+        fontSize: moderateScale(20),
         borderRadius: 10,
         borderColor: '#898989',
-        marginTop: 20,
-        padding: 10,
+        marginTop: verticalScale(20),
+        // padding: 10,
+        padding: '3.5%',
         color: 'black',
     },
 
     btnText: {
         color: '#FFFFFF',
-        fontSize: 22,
+        fontSize: moderateScale(22),
         fontFamily: 'Poppins-SemiBold'
     },
 
@@ -131,14 +211,15 @@ const styles = StyleSheet.create({
         // marginHorizontal: 15,
         height: verticalScale(60),
         width: horizontalScale(310),
+        marginTop: verticalScale(-25),
     },
     boxtext: {
         borderWidth: 1,
-        fontSize: 20,
+        fontSize: moderateScale(20),
         borderRadius: 10,
         borderColor: '#B6B6B6',
-        marginTop: 20,
-        padding: 10,
+        marginTop: verticalScale(20),
+        // padding: 10,
         color: '#898989',
     },
     boxtext1: {
@@ -147,16 +228,30 @@ const styles = StyleSheet.create({
     text: {
         color: '#898989'
     },
-    // textnamee: {
-    //     color: '#868686',
-    //     fontSize: 16,
-    //     paddingHorizontal: horizontalScale(20),
-    //     paddingVertical: verticalScale(14),
-    //     borderColor: '#898989',
-    //     borderRadius: 10,
-    //     borderWidth: 1,
-    //     marginHorizontal: horizontalScale(20),
-    //     marginVertical: verticalScale(12),
-    // },
-
+    validation: {
+        color: 'red',
+        // textAlign: 'center',
+        fontSize: moderateScale(13),
+        fontFamily: 'Poppins-SemiBold',
+    },
+    ProfileContainer: {
+        backgroundColor: '#fff',
+        // width: width,
+        // height: 140,
+        height: '22%',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    subProfileContainer: {
+        width: horizontalScale(110),
+        height: verticalScale(110),
+        borderRadius: 300,
+        backgroundColor: '#ccc',
+        overflow: 'hidden',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 2,
+        borderColor: '#ccc',
+        borderStyle: 'dashed'
+    },
 })

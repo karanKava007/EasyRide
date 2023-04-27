@@ -5,17 +5,13 @@ import { horizontalScale, verticalScale } from '../helper/ Metrics';
 
 export default function Spl({navigation}) {
     return (
-        
-        // <LinearGradient colors={['#ACBDFA', '#194AF9']} style={styles.container}>
         <LinearGradient colors={['#6487ff', '#0038ff']} style={styles.container}>
             <View style={styles.logoSection}>
-            {/* <Image source={require('../assets/image/logo.png')} /> */}
             <Text style={styles.t1}>Easy<Text style={styles.t2}>Ride</Text></Text>
                 <View>
                     <Text style={styles.t3}>SAVE FUEL, REDUCE TRAFFIC</Text>
                 </View>
             </View>
-            {/* Button Section */}
             <View style={styles.buttonSection}>
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('PhoneNumber')}>
                     <Text style={styles.btnText}>Get Started</Text>
@@ -47,9 +43,8 @@ const styles = StyleSheet.create({
     button:{
         backgroundColor:'white',
         alignItems:'center',
-        // paddingHorizontal:30,
         paddingVertical:horizontalScale(20),
-        borderRadius:90,
+        borderRadius:verticalScale(90) && horizontalScale(90),
         marginHorizontal:horizontalScale(25),
         marginTop:verticalScale(30),
     },
@@ -57,7 +52,6 @@ const styles = StyleSheet.create({
         fontFamily:'Poppins-Italic',
         fontSize:50,
         color:'white',
-        // marginTop:'35%',
         marginTop:verticalScale(100),
     },
     t2:{
@@ -67,6 +61,6 @@ const styles = StyleSheet.create({
         fontFamily:'Poppins-Italic',
         color:'white',
         fontSize:14,
-        marginVertical:'-2%'
+        marginVertical:verticalScale(-8)
     }
 });

@@ -6,6 +6,8 @@ import { postreducer } from "./Post.reducer";
 import { UserDataReducer } from "./UserReg.reducer";
 import { authReducer } from "./auth.reducer";
 import { AvailDriverReducer } from "./AvailDri.reducer";
+import { RequestsReducer } from "./request.reducer";
+import { FeedbackReducer } from "./Feedback.reducer";
 
 export const rootReducer = combineReducers({
     countDig: Counter,
@@ -15,4 +17,6 @@ export const rootReducer = combineReducers({
     userReducer: UserDataReducer,
     auth:authReducer,
     availDri: AvailDriverReducer,
+    requestsAc:RequestsReducer,
+    feedback: FeedbackReducer,
 })

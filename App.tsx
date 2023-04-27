@@ -21,15 +21,16 @@ import { configStore } from './src/redux/Store';
 import Counter from './src/container/Counter';
 import Post from './src/container/post/Post';
 import Profile from './src/container/Profile';
-import AvailDri from './src/container/AvailDri';
 import Sample from './src/container/Sample';
 import DriverRegistration from './src/container/DriverRegistration';
 import Auth from './src/auth/Auth';
 import { PersistGate } from 'redux-persist/integration/react'
-import { AuthNav } from './src/routes/StackNav';
+import {  AuthNav, StackNav } from './src/routes/StackNav';
 import Register from './src/registration/Register';
+import AvaiDri from './src/container/post/AvaiDri';
 
-function App(): JSX.Element{
+
+function App(): JSX.Element {
   const { store, persistor } = configStore();
   return (
     <>
@@ -48,11 +49,11 @@ function App(): JSX.Element{
         <PersistGate loading={null} persistor={persistor}>
           <NavigationContainer>
             {/* <StackNav /> */}
-            {/* <AuthNav /> */}
-            <Register/>
+            <AuthNav/>
           </NavigationContainer>
         </PersistGate>
       </Provider>
+      {/* <AvaiDri/> */}
       {/* <Auth/> */}
       {/* <AvailDri/> */}
       {/* <Sample/> */}

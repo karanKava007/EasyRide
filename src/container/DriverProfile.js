@@ -6,7 +6,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getDriverInfo, postDriverInfo, putDriverInfo } from '../redux/action/driver.action'
 import { Dropdown } from 'react-native-element-dropdown'
 import DatePicker from 'react-native-date-picker'
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { object, string, number, date, InferType } from 'yup';
+import { Form, Formik } from 'formik';
+import { useFormik } from 'formik';
+import * as Yup from "yup";
+import ImagePicker from 'react-native-image-crop-picker';
 
 export default function Profile({ navigation }) {
     const [id, setId] = useState()
@@ -19,7 +23,6 @@ export default function Profile({ navigation }) {
     // const [vehicalType, setVehicalType] = useState()
     const [rideTime, setRideTime] = useState()
     const dispatch = useDispatch()
-    const driverInfo = useSelector(state => state.DivReducer)
     const [open, setOpen] = useState(false)
     const [openTime, setOpenTime] = useState(false)
     const [show, setShow] = useState(true)
@@ -27,25 +30,27 @@ export default function Profile({ navigation }) {
     const [time, setTime] = useState(new Date())
     const [spin, setSPin] = useState(null);
     const [dpin, setDPin] = useState(null);
+    const [imagePath, setImagePath] = useState('')
+    const driverInfo = useSelector(state => state.DivReducer)
     const pincodeData = useSelector(state => state.pincode);
-
-    useEffect(() => {
-        setId(driverInfo.driver.id)
-        setFirstName(driverInfo.driver.firstName)
-        setLastName(driverInfo.driver.lastName)
-        setValue(driverInfo.driver.gender)
-        setDob(driverInfo.driver.dob.getFullYear() + "/" + (driverInfo.driver.dob.getMonth() + 1) + "/" + driverInfo.driver.dob.getDate())
-        setVehicle(driverInfo.driver.vehicalType)
-        setRideTime(driverInfo.driver.rideTime)
-        setSPin(driverInfo.driver.sourcePincode)
-        setDPin(driverInfo.driver.destinationPincode)
-    }, [])
+    // console.log('hhhhhhhhhhhhhhhhhhhhh', driverInfo.driver[0]);
+    // useEffect(() => {
+    //     setId(driverInfo.driver.id)
+    //     setFirstName(driverInfo.driver.firstName)
+    //     setLastName(driverInfo.driver.lastName)
+    //     setValue(driverInfo.driver.gender)
+    //     // setDob(driverInfo.driver.dob.getFullYear() + "/" + (driverInfo.driver.dob.getMonth() + 1) + "/" + driverInfo.driver.dob.getDate())
+    //     setVehicle(driverInfo.driver.vehicalType)
+    //     setRideTime(driverInfo.driver.rideTime)
+    //     setSPin(driverInfo.driver.sourcePincode)
+    //     setDPin(driverInfo.driver.destinationPincode)
+    // }, [])
 
 
     const pinData = [];
-    
+
     pincodeData.PinCodes.map((p) => {
-        pinData.push({label1: p.pincode, value: p.pincode})
+        pinData.push({ label1: p.pincode, value: p.pincode })
     });
 
     const addData = () => {
@@ -62,20 +67,20 @@ export default function Profile({ navigation }) {
         }
         dispatch(postDriverInfo(data))
     }
-    const UpdateDriver = () => {
-        let upDriver = {
-            id: id,
-            firstName: firstName,
-            lastName: lastName,
-            dob: date,
-            gender: genderValue,
-            vehicalType: vehicle,
-            rideTime: rideTime,
-            sourcePincode: spin,
-            destinationPincode: dpin,
-        }
-        dispatch(putDriverInfo(upDriver))
-    }
+    // const UpdateDriver = () => {
+    //     let upDriver = {
+    //         id: id,
+    //         firstName: firstName,
+    //         lastName: lastName,
+    //         dob: date,
+    //         gender: genderValue,
+    //         vehicalType: vehicle,
+    //         rideTime: rideTime,
+    //         sourcePincode: spin,
+    //         destinationPincode: dpin,
+    //     }
+    //     dispatch(putDriverInfo(upDriver))
+    // }
 
     const genderData = [
         { label1: 'Male', value: 'male' },
@@ -87,169 +92,237 @@ export default function Profile({ navigation }) {
         { label1: 'Bike', value: 'bike' },
         { label1: 'Scooter', value: 'scooter' },
     ];
-    // console.log(driverInfo.driver.dob.getDate());
+    let DriverSchema = object({
+        fname: string().trim().matches(/[abcdefghijklmnopqrstuvwxyz]+/, 'Is not in correct format').required('Please Enter First Name'),
+        lname: string().trim().matches(/[abcdefghijklmnopqrstuvwxyz]+/, 'Is not in correct format').required('Please Enter Last Name'),
+        dob: Yup.date().required('Required'),
+        email: string().required('Please Enter Email').email('Please Enter Email'),
+        image: Yup.mixed().required('Please Upload Your Image')
+    });
     return (
-        <View style={styles.container}>
-            <View style={styles.container1}>
-            </View>
-            <View style={styles.container2}>
-                <View style={styles.box}>
-                    <Image style={styles.img} source={require('../../src/assets/image/Ellipse11.png')} />
-                    {/* <Text style={styles.text2}>John Doe</Text> */}
-                    <View style={styles.textinput}>
-                        <Text style={styles.text2}>First Name:</Text>
-                        <TextInput value={firstName} onChangeText={setFirstName} style={styles.h1} placeholderTextColor="black" />
-                        {/* <MaterialIcons name="edit" size={40} color='black' onPress={() => handleUpdate(driverInfo)}/> */}
-                    </View>
-                    {/* <View style={styles.textinput}>
-                        <Text style={styles.text2}>Last Name:</Text>
-                        <TextInput value={lastName} onChangeText={setLastName} style={styles.h1} placeholderTextColor="black" />
-                    </View> */}
+        <Formik
+            validationSchema={DriverSchema}
+            enableReinitialize={true}
+            initialValues={{
+                id: driverInfo.driver.id ? driverInfo.driver.id : '',
+                fname: driverInfo.driver[0].firstName ? driverInfo.driver[0].firstName : '',
+                lname: driverInfo.driver[0].lastName ? driverInfo.driver[0].lastName : '',
+                gender: driverInfo.driver[0].gender ? driverInfo.driver[0].gender : '',
+                // dob: driverInfo.driver[0].dob ? driverInfo.driver[0].dob.toDateString() : '',
+                vehicle: driverInfo.driver[0].vehicalType ? driverInfo.driver[0].vehicalType : '',
+                rideTime: driverInfo.driver[0].rideTime ? driverInfo.driver[0].rideTime : '',
+                spin: driverInfo.driver[0].sourcePincode ? driverInfo.driver[0].sourcePincode : '',
+                dpin: driverInfo.driver[0].destinationPincode ? driverInfo.driver[0].destinationPincode : '',
+                image: driverInfo.driver[0].image ? driverInfo.driver[0].image : '',
 
-                    <View style={styles.textinput}>
-                        <Text style={styles.text2}>Gender</Text>
-                        {/* <TextInput placeholder="18" value={driverInfo.driver.gender} style={styles.h1} placeholderTextColor="black" />  */}
-                        <Dropdown
-                            style={[styles.dropdown, styles.h1]}
-                            // placeholderStyle={styles.placeholderStyle}
-                            selectedTextStyle={styles.selectedTextStyle}
-                            iconStyle={styles.iconStyle}
-                            data={genderData}
-                            maxHeight={300}
-                            labelField="label1"
-                            valueField="value"
-                            placeholder="Gender"
-                            value={genderValue}
-                            onChangeText={setValue}
-                            itemTextStyle={{ color: 'black' }}
-                            onChange={item => {
-                                setValue(item.value);
-                                // setgender(item.value);
-                            }} />
-                    </View>
+                // age: userInfo.user.age ? userInfo.user.age : '',
+                // image: userInfo.user.image ? userInfo.user.image : '',
+            }}
+            onSubmit={(values) => {
+                dispatch(putDriverInfo(
+                    {
+                        id: values.id,
+                        firstName: values.fname,
+                        lastName: values.lname,
+                        gender: values.gender,
+                        vehicalType: values.vehicle,
+                        rideTime: values.rideTime,
+                        sourcePincode: values.spin,
+                        destinationPincode: values.dpin,
+                        image: values.image,
+                    }
+                ));
+            }}
+        >
+            {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                values,
+                errors,
+                isValid,
+                touched,
+                setFieldValue
+            }) => (
 
-                    <View style={styles.textinput}>
-                        <Text style={styles.text2}>Date Of Birth:</Text>
-                        {/* <TextInput  value={driverInfo.driver.dob.getFullYear() + "/" + (driverInfo.driver.dob.getMonth() + 1) + "/" + driverInfo.driver.dob.getDate()} style={styles.h1} placeholderTextColor="black" /> */}
-                        <TouchableOpacity onPress={() => setOpen(true)}>
-                            {/* <TextInput  value={driverInfo.driver.dob.getFullYear() + "/" + (driverInfo.driver.dob.getMonth() + 1) + "/" + driverInfo.driver.dob.getDate()} style={styles.h1}/> */}
-                            <Text style={styles.h2} onChangeText={setDob}>{dob}</Text>
+                <View style={styles.container}>
+                    <View style={styles.container2}>
+                        <View style={styles.box}>
+                            {/* driverInfo.driver.image */}
+                            <Image style={styles.img} source={{ uri: driverInfo.driver[0].image }} />
+                            {/* {console.log(driverInfo.driver)} */}
+                            {/* <Text style={styles.text2}>John Doe</Text> */}
+                            <View style={styles.textinput}>
+                                <Text style={styles.text2}>First Name:</Text>
+                                <TextInput value={values.fname} name='fname' onChangeText={handleChange('fname')} style={styles.h1} />
+                                <Text style={styles.validation}>{errors.fname != '' && touched.fname ? errors.fname : ''}</Text>
 
-                        </TouchableOpacity>
-                        <DatePicker
-                            mode="date"
-                            modal
-                            open={open}
-                            date={date}
-                            maximumDate={tdate}
-                            onConfirm={(date) => {
-                                setOpen(false)
-                                setDate(date)
-                                setShow(false)
-                                setDob(date.toDateString())
-                                // console.log(date);
-                            }}
-                            onCancel={() => {
-                                setOpen(false)
-                            }} />
+                            </View>
+                            <View style={styles.textinput}>
+                                <Text style={styles.text2}>Last Name:</Text>
+                                <TextInput value={values.lname} name='lname' onChangeText={handleChange('lname')} style={styles.h1} placeholderTextColor="black" />
+                            </View>
 
-                    </View>
+                            <View style={styles.textinput}>
+                                <Text style={styles.text2}>Gender</Text>
+                                {/* <TextInput placeholder="18" value={driverInfo.driver.gender} style={styles.h1} placeholderTextColor="black" />  */}
+                                {/* <Text value={values.gender} name='gender' onChangeText={handleChange('gender')} style={styles.h1}>{values.gender}</Text> */}
+                                <Dropdown
+                                    style={[styles.dropdown, styles.h1]}
+                                    // placeholderStyle={styles.placeholderStyle}
+                                    selectedTextStyle={styles.selectedTextStyle}
+                                    iconStyle={styles.iconStyle}
+                                    value={values.gender}
+                                    name='gender'
+                                    onChangeText={handleChange('gender')}
+                                    data={genderData}
+                                    maxHeight={300}
+                                    labelField="label1"
+                                    valueField="value"
+                                    placeholder="Gender"
+                                    // value={genderValue}
+                                    // onChangeText={setValue}
+                                    itemTextStyle={{ color: 'black' }}
+                                    onChange={item => {
+                                        setValue(item.value);
+                                        setgender(item.value);
+                                    }} />
+                            </View>
 
-                    <View style={styles.textinput}>
-                        <Text style={styles.text2}>Vehical Type:</Text>
-                        {/* <TextInput placeholder="Car/Bike/Scooter" value={driverInfo.driver.vehicalType} style={styles.h1} placeholderTextColor="black" /> */}
-                        <Dropdown
-                            style={styles.dropdown}
-                            // placeholderStyle={styles.placeholderStyle}
-                            selectedTextStyle={styles.selectedTextStyle}
-                            iconStyle={styles.iconStyle}
-                            data={vehicleData}
-                            maxHeight={300}
-                            labelField="label1"
-                            valueField="value"
-                            placeholder="Vehical Type"
-                            value={vehicle}
-                            onChangeText={setVehicle}
-                            itemTextStyle={{ color: 'black' }}
-                            onChange={item => {
-                                setVehicle(item.value);
-                                // setVehicalType(item.value);
-                            }} />
-                    </View>
-                    <View style={styles.textinput}>
-                        <Text style={styles.text2}>Source Pincode:</Text>
-                        {/* <TextInput placeholder="Car/Bike/Scooter" value={driverInfo.driver.vehicalType} style={styles.h1} placeholderTextColor="black" /> */}
-                        <Dropdown
-                            style={[styles.dropdown, styles.h1]}
-                            // placeholderStyle={styles.placeholderStyle}
-                            selectedTextStyle={styles.selectedTextStyle}
-                            iconStyle={styles.iconStyle}
-                            data={pinData}
-                            maxHeight={300}
-                            labelField="label1"
-                            valueField="value"
-                            placeholder="Gender"
-                            value={spin}
-                            onChangeText={setSPin}
-                            itemTextStyle={{ color: 'black' }}
-                            onChange={item => {
-                                setSPin(item.value);
-                                // setgender(item.value);
-                            }} />
-                    </View>
-                    <View style={styles.textinput}>
-                        <Text style={styles.text2}>Destination Pincode:</Text>
-                        {/* <TextInput placeholder="Car/Bike/Scooter" value={driverInfo.driver.vehicalType} style={styles.h1} placeholderTextColor="black" /> */}
-                        <Dropdown
-                            style={[styles.dropdown, styles.h1]}
-                            // placeholderStyle={styles.placeholderStyle}
-                            selectedTextStyle={styles.selectedTextStyle}
-                            iconStyle={styles.iconStyle}
-                            data={pinData}
-                            maxHeight={300}
-                            labelField="label1"
-                            valueField="value"
-                            placeholder="Gender"
-                            value={dpin}
-                            onChangeText={setDPin}
-                            itemTextStyle={{ color: 'black' }}
-                            onChange={item => {
-                                setDPin(item.value);
-                                // setgender(item.value);
-                            }} />
-                    </View>
+                            {/* <View style={styles.textinput}>
+                                <Text style={styles.text2}>Date Of Birth:</Text>
+                                <TouchableOpacity onPress={() => setOpen(true)}>
+                                </TouchableOpacity>
+                                <DatePicker
+                                    mode="date"
+                                    modal
+                                    open={open}
+                                    date={date}
+                                    name='dob'
+                                    maximumDate={tdate}
+                                    onConfirm={(date) => {
+                                        setOpen(false)
+                                        setDate(date)
+                                        setShow(false)
+                                        setDob(date.toDateString())
+                                        setFieldValue("dob", date.toISOString())
 
-                    <View style={styles.textinput}>
-                        <Text style={styles.text2}>Ride Time:</Text>
-                        {/* <TextInput placeholder="4:00" value={driverInfo.driver.rideTime} style={styles.h1} placeholderTextColor="black" /> */}
-                        <TouchableOpacity onPress={() => setOpenTime(true)} >
-                            <Text style={styles.h2} onChangeText={setRideTime}>{rideTime}</Text>
-                        </TouchableOpacity>
-                        <DatePicker
-                            mode="time"
-                            modal
-                            open={openTime}
-                            date={time}
-                            minuteInterval={15}
-                            onConfirm={(date) => {
-                                setOpenTime(false)
-                                setTime(date)
-                                // setShowTime(false)
-                                // console.log(date);
-                                setRideTime(date.toLocaleTimeString())
-                            }}
-                            onCancel={() => {
-                                setOpenTime(false)
-                            }} />
-                    </View>
-                    <View style={styles.btn}>
-                        <TouchableOpacity style={styles.buttonn} onPress={() => UpdateDriver()}>
-                            <Text style={styles.btntxt}>Save</Text>
-                        </TouchableOpacity>
+                                        // console.log(date);
+                                    }}
+                                    onCancel={() => {
+                                        setOpen(false)
+                                    }} />
+                            </View> */}
+
+                            <View style={styles.textinput}>
+                                <Text style={styles.text2}>Vehical Type:</Text>
+                                {/* <TextInput placeholder="Car/Bike/Scooter" value={driverInfo.driver.vehicalType} style={styles.h1} placeholderTextColor="black" /> */}
+                                <Dropdown
+                                    style={styles.dropdown}
+                                    // placeholderStyle={styles.placeholderStyle}
+                                    selectedTextStyle={styles.selectedTextStyle}
+                                    iconStyle={styles.iconStyle}
+                                    data={vehicleData}
+                                    value={values.vehicle}
+                                    name='vehicle'
+                                    onChangeText={handleChange('vehicle')}
+                                    maxHeight={300}
+                                    labelField="label1"
+                                    valueField="value"
+                                    placeholder="Vehical Type"
+                                    // value={vehicle}
+                                    // onChangeText={setVehicle}
+                                    itemTextStyle={{ color: 'black' }}
+                                    onChange={item => {
+                                        setVehicle(item.value);
+                                        // setVehicalType(item.value);
+                                    }} />
+                            </View>
+                            <View style={styles.textinput}>
+                                <Text style={styles.text2}>Source Pincode:</Text>
+                                {/* <TextInput placeholder="Car/Bike/Scooter" value={driverInfo.driver.vehicalType} style={styles.h1} placeholderTextColor="black" /> */}
+                                <Dropdown
+                                    style={[styles.dropdown, styles.h1]}
+                                    // placeholderStyle={styles.placeholderStyle}
+                                    selectedTextStyle={styles.selectedTextStyle}
+                                    iconStyle={styles.iconStyle}
+                                    data={pinData}
+                                    value={values.spin}
+                                    name='spin'
+                                    onChangeText={handleChange('spin')}
+                                    maxHeight={300}
+                                    labelField="label1"
+                                    valueField="value"
+                                    // value={spin}
+                                    // onChangeText={setSPin}
+                                    itemTextStyle={{ color: 'black' }}
+                                    onChange={item => {
+                                        setSPin(item.value);
+                                        // setgender(item.value);
+                                    }} />
+                            </View>
+                            <View style={styles.textinput}>
+                                <Text style={styles.text2}>Destination Pincode:</Text>
+                                {/* <TextInput placeholder="Car/Bike/Scooter" value={driverInfo.driver.vehicalType} style={styles.h1} placeholderTextColor="black" /> */}
+                                <Dropdown
+                                    style={[styles.dropdown, styles.h1]}
+                                    // placeholderStyle={styles.placeholderStyle}
+                                    selectedTextStyle={styles.selectedTextStyle}
+                                    iconStyle={styles.iconStyle}
+                                    data={pinData}
+                                    value={values.dpin}
+                                    name='dpin'
+                                    onChangeText={handleChange('dpin')}
+                                    maxHeight={300}
+                                    labelField="label1"
+                                    valueField="value"
+                                    // value={dpin}
+                                    // onChangeText={setDPin}
+                                    itemTextStyle={{ color: 'black' }}
+                                    onChange={item => {
+                                        setDPin(item.value);
+                                        // setgender(item.value);
+                                    }} />
+                            </View>
+
+                            <View style={styles.textinput}>
+                                <Text style={styles.text2}>Ride Time:</Text>
+                                {/* <TextInput placeholder="4:00" value={driverInfo.driver.rideTime} style={styles.h1} placeholderTextColor="black" /> */}
+                                <TouchableOpacity onPress={() => setOpenTime(true)} >
+                                    <Text style={styles.h2} onChangeText={setRideTime}>{values.rideTime}</Text>
+                                </TouchableOpacity>
+                                <DatePicker
+                                    mode="time"
+                                    modal
+                                    // rideTime
+                                    name='rideTime'
+                                    onChangeText={handleChange('rideTime')}
+                                    open={openTime}
+                                    date={time}
+                                    minuteInterval={15}
+                                    onConfirm={(date) => {
+                                        setOpenTime(false)
+                                        setTime(date)
+                                        // setShowTime(false)
+                                        // console.log(date);
+                                        setRideTime(date.toLocaleTimeString())
+                                    }}
+                                    onCancel={() => {
+                                        setOpenTime(false)
+                                    }} />
+                            </View>
+                            <View style={styles.btn}>
+                                <TouchableOpacity style={styles.buttonn} onPress={() => { handleSubmit(); console.log('vvvvvvvv'); }}>
+                                    {/* <Text>onPress={() => navigation.navigate('Otp1')}</Text> */}
+                                    <Text style={styles.btntxt}>Save</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
                     </View>
                 </View>
-            </View>
-        </View>
+
+            )}
+        </Formik>
     )
 }
 const styles = StyleSheet.create({
@@ -347,4 +420,11 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         fontSize: 22,
     },
+    validation: {
+        color: 'red',
+        textAlign: 'center',
+        fontSize: 15,
+        fontFamily: 'Poppins-SemiBold',
+    },
 })
+

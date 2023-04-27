@@ -1,54 +1,86 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, ToastAndroid, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { horizontalScale, verticalScale } from '../helper/ Metrics'
 import { ScrollView, TextInput } from 'react-native-gesture-handler'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { SafeAreaView } from 'react-native-safe-area-context'
-
+import { postRequestData } from '../redux/action/request.action'
+import { object, string, number, date, InferType } from 'yup';
+import { Form, Formik, useFormik } from 'formik';
 
 export default function AvailDri() {
-
-  const [agee, setAgee] = useState()
+  const { height } = Dimensions.get('window')
+  const [disable, setDisable] = useState([])
+  const [driverId, setDriverId] = useState()
+  const dispatch = useDispatch()
+  const userUid = useSelector(state => state.auth)
   const AvailabledriverData = useSelector(state => state.availDri)
-  console.log('DriverData hhhhhhhh', AvailabledriverData.availableDriver);
+  let userSchema = object({
+    ridePrice: number().required('Please Enter Ride-Price!!'),
+  });
+  const showToast = () => {
+    ToastAndroid.show('Request sent successfully!', ToastAndroid.SHORT);
+  }
+
 
   return (
-    <>
-      <SafeAreaView>
-        <ScrollView>
-          {AvailabledriverData.availableDriver.map((d, i) => {
-            return (
-              < View style={styles.container} >
-                <View style={[styles.card, styles.shadowProp]}>
-                  <Image style={styles.img} source={require('../../src/assets/image/Ellipse6.png')} />
-                  <View>
-                    <Text style={styles.txt} >Name: <Text style={styles.txt3}>{d.firstName + ' ' + d.lastName}</Text></Text>
-                    <Text style={styles.txt} >{d.sourcePincode + ' > ' + d.destinationPincode}</Text>
-                    <View style={styles.container2}>
-                      <Text style={styles.txt} >Age: <Text style={styles.txt3}>{d.age}</Text></Text>
-                      <Text style={styles.txt} >Ride Price: <Text style={styles.txt3}>150/-</Text></Text>
+    <Formik
+      validationSchema={userSchema}
+      initialValues={{ ridePrice: '' }}
+      onSubmit={(values) => {
+        dispatch(postRequestData(
+          {
+            userid: userUid.user.uid,
+            driverid: driverId,
+            ridePrice: values.ridePrice,
+          }
+        ))
+        setDisable((disable) => [...disable, driverId])
+        showToast()
+      }}
+    >
+      {({
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        values,
+        errors,
+        isValid,
+        touched,
+        setFieldValue
+      }) => (
+        <>
+          <SafeAreaView>
+            <ScrollView>
+              {AvailabledriverData.availableDriver.map((d, i) => {
+                return (
+                  < View style={styles.container} >
+                    <View style={[styles.card, styles.shadowProp]}>
+                      <Image style={styles.img} source={{ uri: `${d.image}` }} />
+                      <View>
+                        <Text style={styles.txt} >Name: <Text style={styles.txt3}>{d.firstName + ' ' + d.lastName}</Text></Text>
+                        <Text style={styles.txt} >{d.sourcePincode + ' > ' + d.destinationPincode}</Text>
+                        <Text style={styles.txt} >Age: <Text style={styles.txt3}>{d.age}</Text></Text>
+                        <Text style={styles.txt} >Ride Time: <Text style={styles.txt3}>{d.rideTime}</Text></Text>
+                        <View style={styles.container2}>
+                          <TextInput keyboardType='numeric' placeholder='Offer Your Price.' name='ridePrice' onChangeText={handleChange('ridePrice')} placeholderTextColor={'#898989'} style={[styles.inputCompo, { color: 'black' }]} />
+                          <Text style={styles.validation}>{errors.ridePrice != '' && touched.ridePrice ? errors.ridePrice : ''}</Text>
+                        </View>
+                      </View>
                     </View>
-                    <Text style={styles.txt} >Ride Time: <Text style={styles.txt3}>{d.rideTime}</Text></Text>
-                  </View>
-                </View>
-                <View style={styles.btn}>
-                  <View style={styles.btn1}>
-                    <TouchableOpacity style={styles.button}>
-                      <Text style={styles.txt1}>Deny</Text>
-                    </TouchableOpacity>
-                  </View>
-                  <View style={styles.btn2}>
-                    <TouchableOpacity style={styles.button}>
-                      <Text style={styles.txt2}>Accept</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View >
-            )
-          })}
-        </ScrollView>
-      </SafeAreaView>
-    </>
+                    <View style={styles.btn}>
+                      <TouchableOpacity style={styles.btn1} disabled={disable.includes(d.userid) ? true : false} onPress={() => { setDriverId(d.userid); handleSubmit() }}>
+                        <Text style={styles.txt2} >{disable.includes(d.userid) ? <Text style={{ color: '#ccc' }}>Request Sended</Text> : <Text>Send Request</Text>}</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View >
+                )
+              })}
+            </ScrollView>
+          </SafeAreaView>
+        </>
+      )}
+    </Formik>
   )
 }
 
@@ -61,7 +93,7 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: 'white',
-    height: verticalScale(190),
+    height: verticalScale(235),
     width: horizontalScale(330),
     marginTop: '5%',
     borderRadius: 10,
@@ -73,6 +105,17 @@ const styles = StyleSheet.create({
     // paddingHorizontal: 25,  
     // width: '90%',
     // marginVertical: 10,
+  },
+  inputCompo: {
+    color: 'black',
+    width: '100%',
+    marginTop: 7,
+    fontSize: 15,
+    fontFamily: 'Poppins-Light',
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    paddingBottom: 2,
+    borderColor: '#898989',
   },
   shadowProp: {
     elevation: 10,
@@ -99,7 +142,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   container2: {
-    flexDirection: 'row',
+    marginLeft: horizontalScale(11),
   },
   txt1: {
     color: 'red',
@@ -107,9 +150,10 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-SemiBold',
   },
   txt2: {
-    color: 'green',
-    fontSize: 16,
+    color: '#194AF9',
+    fontSize: 18,
     fontFamily: 'Poppins-SemiBold',
+    fontWeight: '900'
   },
   btn: {
     // flex:1,
@@ -125,13 +169,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderTopLeftRadius: 1,
     borderTopRightRadius: 1,
-    borderColor: '#898989',
+    borderColor: '#ccc',
     marginTop: verticalScale(15),
     paddingTop: verticalScale(5),
   },
   btn1: {
     flex: 1,
     alignItems: 'center',
+    // margin:verticalScale(20)
     // backgroundColor:'black',
     // paddingRight: horizontalScale(85),
   },
@@ -145,4 +190,10 @@ const styles = StyleSheet.create({
     // paddingRight:90,
     // borderTopWidth:1,
   },
-});  
+  validation: {
+    color: 'red',
+    fontSize: 10,
+    fontFamily: 'Poppins-SemiBold',
+  },
+});
+

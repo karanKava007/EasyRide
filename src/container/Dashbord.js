@@ -1,14 +1,42 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, Icon, TextInput, Button } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, Icon, TextInput, Button, PermissionsAndroid } from 'react-native'
 import { Dropdown } from 'react-native-element-dropdown';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-native-date-picker'
 import { horizontalScale, verticalScale } from '../helper/ Metrics';
 import { set } from 'react-native-reanimated';
 import { ScrollView } from 'react-native-gesture-handler';
 import { getPincode, PinGetData } from '../redux/action/pincode.action';
 import { useDispatch, useSelector } from 'react-redux';
+import MapView from 'react-native-maps';
+import { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import Geolocation from "react-native-geolocation-service";
 import { getDriverInfoReq } from '../redux/action/AvailDri.action';
+
+const requestLocationPermission = async () => {
+    try {
+        const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            {
+                title: 'Geolocation Permission',
+                message: 'Can we access your location?',
+                buttonNeutral: 'Ask Me Later',
+                buttonNegative: 'Cancel',
+                buttonPositive: 'OK',
+            },
+        );
+        console.log('granted', granted);
+        if (granted === 'granted') {
+            console.log('You can use Geolocation');
+            return true;
+        } else {
+            console.log('You cannot use Geolocation');
+            return false;
+        }
+    } catch (err) {
+        return false;
+    }
+};
 
 export default function Dashbord({ navigation }) {
     const [value, setValue] = useState(null);
@@ -23,6 +51,16 @@ export default function Dashbord({ navigation }) {
     const [isSelected2, setIsSelecteed2] = useState(false)
     const [isSelected3, setIsSelecteed3] = useState(false)
     const [vehicalTypeData, setVehicalTypeData] = useState('')
+
+    const [region, setRegion] = useState(null);
+    const mapRef = useRef(null);
+
+    const [location1, setLocation1] = useState({
+        latitude: 10,
+        longitude: 10,
+        latitudeDelta: 0.001,
+        longitudeDelta: 0.001,
+    });
 
     const buttonHandler1 = () => {
         setIsSelecteed1(true);
@@ -43,18 +81,46 @@ export default function Dashbord({ navigation }) {
         setIsSelecteed3(true);
         setVehicalTypeData('bike')
     }
-
-
-    // function
-    // 4 data
-    // action func call sent data
-    // navigate
-
     const pincodeData = useSelector(state => state.pincode);
 
     useEffect(() => {
+        getLocation()
+            .then((response) => console.log(response.coords.latitude, response.coords.longitude));
         dispatch(getPincode())
     }, []);
+
+
+    const getLocation = async () => {
+        return new Promise((resolve, reject) =>
+            Geolocation.getCurrentPosition(
+                (position) => {
+                    resolve(position);
+                    // console.log('iiiiiiiiiiiiiiiiiiiiiiiiii', position.coords.latitude);
+                    const { latitude, longitude } = position.coords;
+                    setLocation1({
+                        latitude,
+                        longitude,
+                        latitudeDelta: 0.001,
+                        longitudeDelta: 0.001,
+                    })
+                    setRegion({
+                        latitude,
+                        longitude,
+                        latitudeDelta: 0.001,
+                        longitudeDelta: 0.001,
+                    });
+                },
+                (error) => {
+                    reject(error);
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 15000,
+                }
+            )
+        );
+    };
+
 
     const pinData = [];
 
@@ -62,14 +128,18 @@ export default function Dashbord({ navigation }) {
         pinData.push({ label1: p.pincode, value: p.pincode })
     });
 
+
+
+
+
+
     const handleRide = () => {
         data = {
             vehicalType: vehicalTypeData,
             sourcePincode: value,
             destinationPincode: Tvalue,
-            time: time.toLocaleTimeString(),
+            time: time.toLocaleTimeString().toLowerCase(),
         }
-        // console.log('DashBoardLog',data);
         dispatch(getDriverInfoReq(data))
 
     }
@@ -77,7 +147,21 @@ export default function Dashbord({ navigation }) {
     return (
         <View style={styles.container}>
             <View style={styles.subconatiner1}>
-                <Image source={require('../assets/image/Screenshot.png')} style={styles.map} />
+                <MapView
+                    style={styles.map}
+                    initialRegion={region}
+                    showsUserLocation={true}
+                    followsUserLocation={true}
+                    showsMyLocationButton={true}
+                    rotateEnabled={true}>
+                    <Marker
+                        style={styles.marker}
+                        title='Yor are here'
+                        description='Find Your Next Ride With EasyRide'
+                        coordinate={location1}
+
+                    />
+                </MapView>
             </View>
             <View style={styles.subcontainer2}>
                 <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -151,17 +235,14 @@ export default function Dashbord({ navigation }) {
                         open={openTime}
                         date={time}
                         minuteInterval={15}
-                        minimumDate={stime}
                         onConfirm={(date) => {
                             setOpenTime(false)
                             setTime(date)
                             setShowTime(false)
-                            // console.log(date);
                         }}
                         onCancel={() => {
                             setOpenTime(false)
-                        }}
-                    />
+                        }} />
 
                     <TouchableOpacity style={styles.button} onPress={() => { handleRide(); navigation.navigate('AvailDri'); }}>
                         <Text style={styles.btnText}>Find Driver</Text>
@@ -172,6 +253,18 @@ export default function Dashbord({ navigation }) {
     )
 }
 const styles = StyleSheet.create({
+    subconatiner1: {
+        position: 'relative',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+    },
+    map: {
+        ...StyleSheet.absoluteFillObject,
+        width: '100%',
+        height: '55%',
+    },
     container: {
         flex: 1,
     },
@@ -179,17 +272,24 @@ const styles = StyleSheet.create({
         flex: 4.5,
         alignItems: 'center',
         justifyContent: 'center',
-    },
-    map: {
+        height: '100%',
         width: '100%',
-        height: '110%',
     },
     subcontainer2: {
         flex: 5,
         backgroundColor: 'white',
         borderTopLeftRadius: 33,
         borderTopRightRadius: 33,
+        position: 'absolute',
+        width: '100%',
+        bottom: 0,
+        height: '50%'
 
+
+    },
+    marker: {
+        width: 100,
+        height: 100,
     },
     vectorbtn: {
         width: '20%',
@@ -211,10 +311,10 @@ const styles = StyleSheet.create({
         fontSize: 12,
     },
     vectorText1: {
-        // marginTop:'10%'
+        // marginTop:'10%',
         color: '#0D0F17',
         fontSize: 12,
-        marginTop: '5%'
+        marginTop: '6%'
     },
     dropdown: {
         margin: 10,
@@ -240,8 +340,6 @@ const styles = StyleSheet.create({
     iconStyle: {
         width: 20,
         height: 20,
-
-
     },
     inputSearchStyle: {
         height: 40,
@@ -266,15 +364,15 @@ const styles = StyleSheet.create({
     },
     img: {
         width: '80%',
-        height: '50%',
+        height: '54%',
     },
     img2: {
         width: '53%',
-        height: '60%',
+        height: '64%',
     },
     img3: {
         width: '59%',
-        height: '61%',
+        height: '64%',
     },
     textname: {
         color: 'black'

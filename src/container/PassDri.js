@@ -1,86 +1,92 @@
 import { View, Text, StyleSheet, Image, Button, TouchableOpacity } from 'react-native'
 import React from 'react'
-import { horizontalScale, verticalScale } from '../helper/ Metrics'
+import { horizontalScale, moderateScale, verticalScale } from '../helper/ Metrics'
+import { ScrollView } from 'react-native-gesture-handler'
+import { Passenger } from '../routes/StackNav'
+import { useRoute } from '@react-navigation/native'
 
 export default function PassDri({navigation}) {
-  return (
-    <View style={style.container}>
-        <View style={style.info}>
-            <Text style={style.infotext}>Are You a Employee or a Driver?</Text>
+    return (
+        <View style={style.container}>
+            <View style={style.info}>
+                <Text style={style.infotext}>Are You a Passenger or a Driver?</Text>
+            </View>
+            <View style={style.img}>
+                {/* <Text style={style.dummy}>Hello</Text> */}
+                <Image source={require('../../src/assets/image/PassDri.png')} style={style.logo} />
+            </View>
+            <View style={style.btn}>
+                <TouchableOpacity onPress={() => navigation.navigate('WelToRide')}>
+                    {/* navigation.navigate('WelToRide') */}
+                    <Text style={style.btnpass}>Passenger</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('DriverRegistration')}>
+                    <Text style={style.btndri}>Driver</Text>
+                </TouchableOpacity>
+            </View>
         </View>
-        <View style={style.img}>
-            {/* <Text style={style.dummy}>Hello</Text> */}
-            <Image source={require('../../src/assets/image/PassDri.png')} style={style.logo}/>
-        </View>
-        <View style={style.btn}>
-            <TouchableOpacity onPress={() => navigation.navigate('WelToRide')}>
-                <Text style={style.btnpass}>Passenger</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('DriverRegistration')}>
-                <Text style={style.btndri}>Driver</Text>
-            </TouchableOpacity>
-        </View>
-    </View>
-  )
+    )
 }
 const style = StyleSheet.create({
-    container:{
-        flex:1,
-        backgroundColor:'white',
-        padding:40,
+    container: {
+        flex: 1,
+        backgroundColor: 'white',
+        // padding:40,
+        padding: '11%',
         // paddingHorizontal:50,
-        alignItems:'center',
+        alignItems: 'center',
     },
-    info:{
+    info: {
         // flex:0.6,
-        justifyContent:'center',
+        justifyContent: 'center',
     },
-    infotext:{
-        textAlign:'center',
-        color:'black',
-        fontSize:22,
-        fontWeight:600,
-        fontFamily:'Poppins-SemiBold',
+    infotext: {
+        textAlign: 'center',
+        color: 'black',
+        fontSize: moderateScale(22),
+        fontWeight: 600,
+        fontFamily: 'Poppins-SemiBold',
     },
-    img:{
-        flex:2,
+    img: {
+        flex: 2,
         // width: '115%',
-        marginTop:'15%',
+        // marginTop:'15%',
+        marginTop: verticalScale(50),
         // width:horizontalScale(325),
-        alignItems:'center',
+        alignItems: 'center',
     },
-    logo:{
+    logo: {
         // width: '90%',
-        width:horizontalScale(295),
+        width: horizontalScale(295),
         // height: '85%',
-        height:verticalScale(310),
+        height: verticalScale(310),
     },
-    btn:{
-        flex:1,
+    btn: {
+        flex: 1,
         // width:'105%',
-        height:verticalScale(55),
+        height: verticalScale(55),
         // paddingHorizontal:horizontalScale(120),
-        width:horizontalScale(295),
+        width: horizontalScale(295),
     },
-    btnpass:{
-        backgroundColor:'#194af9',
-        color:'white',
-        padding:8,
-        borderRadius:30,
-        textAlign:'center',
-        fontSize:22,
-        marginTop:50,
-        fontFamily:'Poppins-SemiBold',
+    btnpass: {
+        backgroundColor: '#194af9',
+        color: 'white',
+        padding: verticalScale(8),
+        borderRadius: 30,
+        textAlign: 'center',
+        fontSize: moderateScale(22),
+        marginTop: 50,
+        fontFamily: 'Poppins-SemiBold',
     },
-    btndri:{
-        backgroundColor:'#B6B6B6',
-        color:'black',
-        padding:8,
-        borderRadius:30,
-        textAlign:'center',
-        marginTop:20,
-        fontSize:22,
-        fontWeight:600,
-        fontFamily:'Poppins-SemiBold',
+    btndri: {
+        backgroundColor: '#B6B6B6',
+        color: 'black',
+        padding: verticalScale(8),
+        borderRadius: 30,
+        textAlign: 'center',
+        marginTop: verticalScale(20),
+        fontSize: moderateScale(22),
+        fontWeight: 600,
+        fontFamily: 'Poppins-SemiBold',
     }
 })
