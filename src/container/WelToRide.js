@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, TextInput, TouchableOpacity, Button, Dimensions, Image } from 'react-native';
+import { Text, View, StyleSheet, TextInput, TouchableOpacity, Image, KeyboardAvoidingView, TouchableWithoutFeedback,Keyboard } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-native-date-picker';
 import { horizontalScale, moderateScale, verticalScale } from '../helper/ Metrics';
@@ -38,7 +38,10 @@ export default function WelToEasyRide({ navigation }) {
     //     }
     //     dispatch(postUserInfo(data))
     // }
+    const userrInfo = useSelector(state => state.userReducer)
+    console.log(userrInfo, 'gggggggggggggg');
     useEffect(() => {
+        countAge()
         dispatch(getUserLive())
     }, [])
     let userSchema = object({
@@ -49,117 +52,123 @@ export default function WelToEasyRide({ navigation }) {
         image: Yup.mixed().required('Please Upload Your Image')
     });
     return (
-        <Formik
-            validationSchema={userSchema}
-            initialValues={{ fname: '', lname: '', dob: '', email: '', image: '' }}
-            onSubmit={(values, { resetForm }) => {
-                dispatch(postUserInfo(
-                    {
-                        firstName: values.fname,
-                        lastName: values.lname,
-                        email: values.email,
-                        dob: values.dob,
-                        age: agee,
-                        uid: userUid.user.uid,
-                        phoneNumber: userUid.user.phoneNumber,
-                        image: imagePath,
-                        userType:'user',
-                    }));
-                    // navigation.navigate('Dashbord');    
-                console.log('fffffffffffffffffffffffffffffff',values);
-                resetForm();
-            }}
-        >
-            {({
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                values,
-                errors,
-                isValid,
-                touched,
-                setFieldValue
-            }) => (
-                <>
-                <ScrollView style={{backgroundColor:'white'}}>
-                    <View style={styles.container}>
-                        <View style={{ alignItems: 'center' }}>
-                            <Text style={styles.h2}>Welcome To Easy Ride!</Text>
-                            <Text style={styles.h3}>Let's Get acquainted</Text>
-                        </View>
-                        <View>
-                            <View style={styles.ProfileContainer}>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        ImageCropPicker.openPicker({
-                                            width: 300,
-                                            height: 400,
-                                            cropping: true
-                                        })
-                                            .then((image) => { setImagePath(image.path); setFieldValue("image", image.path) });
-                                    }} name='image'>
-                                    <View style={styles.subProfileContainer}>
-                                        <Image source={imagePath == '' ? require('../assets/image/user.png') : {uri: imagePath}} style={{ height: '100%', width: '100%' }} />
+        <KeyboardAvoidingView
+            style={styles.container1}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <Formik
+                    validationSchema={userSchema}
+                    initialValues={{ fname: '', lname: '', dob: '', email: '', image: '' }}
+                    onSubmit={(values, { resetForm }) => {
+                        dispatch(postUserInfo(
+                            {
+                                firstName: values.fname,
+                                lastName: values.lname,
+                                email: values.email,
+                                dob: values.dob,
+                                age: agee,
+                                uid: userUid.user.uid,
+                                phoneNumber: userUid.user.phoneNumber,
+                                image: imagePath,
+                                userType: 'user',
+                            }));
+                        // navigation.navigate('Dashbord');    
+                        console.log('fffffffffffffffffffffffffffffff', values);
+                        resetForm();
+                    }}
+                >
+                    {({
+                        handleChange,
+                        handleBlur,
+                        handleSubmit,
+                        values,
+                        errors,
+                        isValid,
+                        touched,
+                        setFieldValue
+                    }) => (
+                        <>
+                            <ScrollView style={{ backgroundColor: 'white' }}>
+                                <View style={styles.container}>
+                                    <View style={{ alignItems: 'center' }}>
+                                        <Text style={styles.h2}>Welcome To Easy Ride!</Text>
+                                        <Text style={styles.h3}>Let's Get acquainted</Text>
                                     </View>
-                                </TouchableOpacity>
-                                <Text style={styles.validation}>{errors.image != '' && touched.image ? errors.image : ''}</Text>
-                            </View>
-                            <TextInput placeholder='First Name' style={styles.box} name='fname' onChangeText={handleChange('fname')} placeholderTextColor="#898989" />
-                            <Text style={styles.validation}>{errors.fname != '' && touched.fname ? errors.fname : ''}</Text>
-                            <TextInput placeholder="Last Name" style={styles.box} name='lname' onChangeText={handleChange('lname')} placeholderTextColor="#898989" />
-                            <Text style={styles.validation}>{errors.lname != '' && touched.lname ? errors.lname : ''}</Text>
-                            <TextInput placeholder="Email" keyboardType='email-address' style={styles.box} name='email' onChangeText={handleChange('email')} placeholderTextColor="#898989" />
-                            <Text style={styles.validation}>{errors.email != '' && touched.email ? errors.email : ''}</Text>
-                            <TouchableOpacity onPress={() => setOpen(true)}>
-                                <Text style={[styles.box]}>{show ? <Text style={styles.text}> DOB </Text> : <Text style={styles.boxtext1}>{date.toDateString()}</Text>}</Text>
-                            </TouchableOpacity>
+                                    <View>
+                                        <View style={styles.ProfileContainer}>
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    ImageCropPicker.openPicker({
+                                                        width: 300,
+                                                        height: 400,
+                                                        cropping: true
+                                                    })
+                                                        .then((image) => { setImagePath(image.path); setFieldValue("image", image.path) });
+                                                }} name='image'>
+                                                <View style={styles.subProfileContainer}>
+                                                    <Image source={imagePath == '' ? require('../assets/image/user.png') : { uri: imagePath }} style={{ height: '100%', width: '100%' }} />
+                                                </View>
+                                            </TouchableOpacity>
+                                            <Text style={styles.validation}>{errors.image != '' && touched.image ? errors.image : ''}</Text>
+                                        </View>
+                                        <TextInput placeholder='First Name' style={styles.box} name='fname' onChangeText={handleChange('fname')} placeholderTextColor="#898989" />
+                                        <Text style={styles.validation}>{errors.fname != '' && touched.fname ? errors.fname : ''}</Text>
+                                        <TextInput placeholder="Last Name" style={styles.box} name='lname' onChangeText={handleChange('lname')} placeholderTextColor="#898989" />
+                                        <Text style={styles.validation}>{errors.lname != '' && touched.lname ? errors.lname : ''}</Text>
+                                        <TextInput placeholder="Email" keyboardType='email-address' style={styles.box} name='email' onChangeText={handleChange('email')} placeholderTextColor="#898989" />
+                                        <Text style={styles.validation}>{errors.email != '' && touched.email ? errors.email : ''}</Text>
+                                        <TouchableOpacity onPress={() => setOpen(true)}>
+                                            <Text style={[styles.box]}>{show ? <Text style={styles.text}> DOB </Text> : <Text style={styles.boxtext1}>{date.toDateString()}</Text>}</Text>
+                                        </TouchableOpacity>
 
-                            <DatePicker
-                                mode="date"
-                                modal
-                                open={open}
-                                date={date}
-                                maximumDate={tDate}
-                                name='dob'
-                                onConfirm={(date) => {
-                                    setOpen(false)
-                                    setDate(date)
-                                    setShow(false)
-                                    setFieldValue("dob", date)
-                                }}
-                                onCancel={() => {
-                                    setOpen(false)
-                                }} />
-                            <Text style={styles.validation}>{errors.dob != '' && touched.dob ? errors.dob : ''}</Text>
-                        </View>
+                                        <DatePicker
+                                            mode="date"
+                                            modal
+                                            open={open}
+                                            date={date}
+                                            maximumDate={tDate}
+                                            name='dob'
+                                            onConfirm={(date) => {
+                                                setOpen(false)
+                                                setDate(date)
+                                                setShow(false)
+                                                setFieldValue("dob", date)
+                                            }}
+                                            onCancel={() => {
+                                                setOpen(false)
+                                            }} />
+                                        <Text style={styles.validation}>{errors.dob != '' && touched.dob ? errors.dob : ''}</Text>
+                                    </View>
 
-                        <View style={styles.buttonSection}>
-                            <TouchableOpacity style={styles.button} onPress={() => { countAge(); handleSubmit() }}>
-                                <Text style={styles.btnText}>Get Started</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </ScrollView>
-                </>
-            )}
-        </Formik>
+                                    <View style={styles.buttonSection}>
+                                        <TouchableOpacity style={styles.button} onPress={() => { countAge(); handleSubmit() }}>
+                                            <Text style={styles.btnText}>Get Started</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </ScrollView>
+                        </>
+                    )}
+                </Formik>
+            </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
     )
 }
 
 // const { height, width } = Dimensions.get('window')
 const styles = StyleSheet.create({
+    container1:{
+        flex:1,
+    },
     container: {
         flex: 1,
         backgroundColor: '#FFFFFF',
         flexDirection: 'column',
         // padding: 20,
         padding: '5%',
-
     },
 
     h2: {
-        // textAlign:'center',
-        // fontWeight: 'bold',
         fontSize: moderateScale(25),
         marginTop: verticalScale(40),
         fontFamily: 'Poppins-SemiBold',
@@ -252,6 +261,5 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 2,
         borderColor: '#ccc',
-        borderStyle: 'dashed'
     },
 })

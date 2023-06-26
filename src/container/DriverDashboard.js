@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { horizontalScale, verticalScale } from '../helper/ Metrics'
 import { ScrollView, TextInput } from 'react-native-gesture-handler'
 import { useDispatch, useSelector } from 'react-redux'
-import { getUserInfo, getUserLive, putUserInfo } from '../redux/action/user.action'
+import {   getUserInfo, getUserLive, putUserInfo } from '../redux/action/user.action'
 import { getRequestInfo, RequestDelete } from '../redux/action/request.action'
 import { getDriverInfo, getDriverLive } from '../redux/action/driver.action'
 import { verifyOTP } from '../redux/action/auth.action'
@@ -16,14 +16,9 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 export default function DriverDashboard() {
   const { height } = Dimensions.get('window')
   const userReq = useSelector(state => state.requestsAc)
-  // const user = useSelector(state => state.userReducer)
   const userInfo = useSelector(state => state.userReducer)
   const userUid = useSelector(state => state.auth)
   const DriverInfoDataa = useSelector(state => state.DivReducer)
-  console.log('reqreqreqreqreq',userReq);
-  console.log('_________userData_________',userInfo.liveUser);
-  console.log('_________useruid_________________',userUid);
-  console.log('_______driverinfodatta________',DriverInfoDataa.driverLive);
   const [press, setPress] = useState([])
   const [a, setA] = useState([])
   const [firstName, setFirstName] = useState()
@@ -33,44 +28,38 @@ export default function DriverDashboard() {
   const [rideTime, setRideTime] = useState('')
   const dispatch = useDispatch()
   const CurrDriverId = userUid.user.uid;
-  console.log('tyttttttttttttt',CurrDriverId);
   const blank = []
   useEffect(() => {
-    dispatch(getRequestInfo(),verifyOTP(),getUserLive(),getDriverLive(),)
-    // dispatch(verifyOTP())
-    // dispatch(getUserInfo())
-    // dispatch(getUserInfo())
-    // dispatch(getDriverLive())
+    dispatch(getUserLive(),verifyOTP(),getDriverLive())
+    dispatch(getRequestInfo())
     handleLoadRequest()
-  }, [])
-  // userReq.requests
-console.log('------------------------',blank);
-console.log('------------------------',a);
-  const handleLoadRequest = () => {
-    let fData = userReq.requests.filter((u, i) => u.driverid === CurrDriverId)
-    console.log(fData,'hhhhhhhhhhhtttttttt');
-    userInfo.liveUser.map((d, i) => {
-      fData.map((data, item) => {
-        if (data.userid === d.uid) {
-          blank.push({ ...d, price: data.ridePrice, reqId: data.id })
-        }
-      })
+  }, [userReq.requests])
+const handleLoadRequest = () => {
+  let fData = userReq.requests.filter((u, i) => u.driverid === CurrDriverId)
+  console.log('--------FDATA---------',fData);
+  userInfo.liveUser.map((d, i) => {
+    fData.map((data, item) => {
+      if (data.userid === d.uid) {
+        blank.push({ ...d, price: data.ridePrice, reqId: data.id })
+      }
     })
-    a.length > 0 ?
-      DriverInfoDataa.driver.map((item, index) => {
-        if (item.userid === CurrDriverId) {
-          setFirstName(item.firstName)
-          setLastName(item.lastName)
-          setDPin(item.destinationPincode)
-          setSPin(item.sourcePincode)
-          setRideTime(item.rideTime)
-        }
-      }) : <View style={{ height: height, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center', paddingBottom: 120 }}>
+  })
+  a.length > 0 ?
+  DriverInfoDataa.driver.map((item, index) => {
+    if (item.userid === CurrDriverId) {
+      setFirstName(item.firstName)
+      setLastName(item.lastName)
+      setDPin(item.destinationPincode)
+      setSPin(item.sourcePincode)
+      setRideTime(item.rideTime)
+    }
+  }) : <View style={{ height: height, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center', paddingBottom: 120 }}>
         <Image source={require('../assets/image/sad.gif')} style={{ height: 200, width: 200 }} />
         <Text style={[styles.txt1, { color: '#777', fontSize: 24, fontWeight: '200' }]}>No Requests Found !!</Text>
       </View>
 
-    setA(blank)
+setA(blank)
+// console.log('------------------------',a);
     // setDriverData(storageOfDriverInfo)
 
 
@@ -132,7 +121,7 @@ console.log('------------------------',a);
                         </View>
                         <View style={styles.btn2}>
                           <TouchableOpacity onPress={() => {
-                            Linking.openURL('whatsapp://send?text=' + `Name : ${'*' + firstName + '*'} \nSource Pincode : *${sPin}* \nDestination Pincode : *${dPin}* \nRide Price :  *${d.price}* \nPlate Number: *${DriverInfoDataa.driverLive[0].PlateNo}*` + '&phone=' + d.phoneNumber)
+                            Linking.openURL('whatsapp://send?text=' + `Name : ${'*' + firstName + '*'} \nSource Pincode : *${sPin}* \nDestination Pincode : *${dPin}* \nRide Price :  *${d.price}* \nPlate Number: *${DriverInfoDataa.driverLive[0].PlateNo}*` + '&phone=' + d.phoneNumber);
                           }} style={styles.button}>
                             <Text style={styles.txt2}>Chat</Text>
                           </TouchableOpacity>

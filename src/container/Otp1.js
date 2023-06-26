@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, SafeAreaView } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from 'react-native'
 import React, { useState } from 'react'
 import { horizontalScale, verticalScale } from '../helper/ Metrics';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,29 +14,38 @@ export default function Otp1({ navigation }) {
         dispatch(verifyOTP(Phoneauth.confirm, code, navigation))
     }
     return (
-        <View style={Styles.container}>
-            <View style={Styles.v1}>
-                <Text style={Styles.t1}>Otp Verification</Text>
-            </View>
-            <View style={Styles.v2}>
-                <Text style={Styles.t2}>Enter the verification code we just send on phone number</Text>
-                <View style={Styles.v3}>
-                    <TextInput maxLength={6} keyboardType='numeric' placeholder='OTP' placeholderTextColor={'#898989'} onChangeText={setCode} style={Styles.v4}></TextInput>
+        <KeyboardAvoidingView
+            style={Styles.container1}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View style={Styles.container}>
+                    <View style={Styles.v1}>
+                        <Text style={Styles.t1}>Otp Verification</Text>
+                    </View>
+                    <View style={Styles.v2}>
+                        <Text style={Styles.t2}>Enter the verification code we just send on phone number</Text>
+                        <View style={Styles.v3}>
+                            <TextInput maxLength={6} keyboardType='numeric' placeholder='OTP' placeholderTextColor={'#898989'} onChangeText={setCode} style={Styles.v4}></TextInput>
+                        </View>
+                        {
+                            Phoneauth.error != '' ? <Text style={Styles.validation}>{Phoneauth.error}</Text> : ''
+                        }
+                        <View style={Styles.button}>
+                            <TouchableOpacity style={Styles.btn} onPress={() => { handleOTP(); }}>
+                                {/* navigation.navigate('Permisionocation'); */}
+                                <Text style={Styles.btntxt}>Verify</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
                 </View>
-                {
-                    Phoneauth.error != '' ? <Text style={Styles.validation}>{Phoneauth.error}</Text> : ''
-                }
-                <View style={Styles.button}>
-                    <TouchableOpacity style={Styles.btn} onPress={() => { handleOTP(); }}>
-                        {/* navigation.navigate('Permisionocation'); */}
-                        <Text style={Styles.btntxt}>Verify</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </View>
+            </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
     )
 }
 const Styles = StyleSheet.create({
+    container1:{
+        flex:1,
+    },
     container: {
         flex: 1,
         backgroundColor: 'white',
@@ -107,7 +116,7 @@ const Styles = StyleSheet.create({
         color: 'red',
         fontSize: 15,
         fontFamily: 'Poppins-SemiBold',
-        marginLeft:25,
-        textAlign:'center',
+        marginLeft: 25,
+        textAlign: 'center',
     },
 })

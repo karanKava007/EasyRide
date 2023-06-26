@@ -7,13 +7,9 @@ import { StackActions, useNavigation } from '@react-navigation/native';
 
 export default function Setting({ navigation }) {
     const dispatch = useDispatch()
+    const userInfo = useSelector(state => state.userReducer)
     const handleLogOut = () => {
-        // navigation.reset()
-        // navigation.reset({
-        //     index: 0,
-        //     routes: [{ name: 'Spl' }],
-        // });
-        navigation.navigate('Spl1')
+        navigation.navigate('Spl')
         dispatch(logOutUser())
     }
     return (
@@ -27,7 +23,7 @@ export default function Setting({ navigation }) {
                     <AntDesign style={styles.icon} name='right' />
                     <View>
                         <Text style={styles.text1}>Phone Number</Text>
-                        <Text style={styles.textt}>6666666666</Text>
+                        <Text style={styles.textt}>9875100797</Text>
                     </View>
                 </TouchableOpacity>
 
@@ -46,7 +42,7 @@ export default function Setting({ navigation }) {
 
             </View>
             <View style={styles.view3}>
-                <TouchableOpacity onPress={() => { handleLogOut(); }}>
+                <TouchableOpacity onPress={() => {handleLogOut();}}>
                     <Text style={styles.text3}>Log Out</Text>
                 </TouchableOpacity>
             </View>

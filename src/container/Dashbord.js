@@ -100,14 +100,14 @@ export default function Dashbord({ navigation }) {
                     setLocation1({
                         latitude,
                         longitude,
-                        latitudeDelta: 0.001,
-                        longitudeDelta: 0.001,
+                        latitudeDelta: 0.1,
+                        longitudeDelta: 0.1,
                     })
                     setRegion({
                         latitude,
                         longitude,
-                        latitudeDelta: 0.001,
-                        longitudeDelta: 0.001,
+                        latitudeDelta: 0.01,
+                        longitudeDelta: 0.01,
                     });
                 },
                 (error) => {

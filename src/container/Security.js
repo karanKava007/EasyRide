@@ -1,18 +1,17 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity,Linking } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, Linking } from 'react-native'
 import React from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { create } from 'react-test-renderer'
 import { horizontalScale, verticalScale } from '../helper/ Metrics';
 
-export default function Security({navigation}) {
+export default function Security({ navigation }) {
     return (
         <View style={styles.container}>
             <View style={styles.heading}>
-                {/* <Text style={styles.safety}>Safety</Text> */}
             </View>
             <View style={styles.logo}>
-                <Image source={require('../../src/assets/image/shield.gif')} style={{ height: '80%',width: '50%' }}/>
+                <Image source={require('../../src/assets/image/shield.gif')} style={{ height: '80%', width: '50%' }} />
             </View>
             <View style={styles.text}>
                 <Text style={styles.contact}>Who Do You Want To Contact?</Text>
@@ -21,7 +20,7 @@ export default function Security({navigation}) {
                 <TouchableOpacity style={styles.btn} onPress={() => { Linking.openURL('tel:108'); }}>
                     <View>
                         {/* <Ionicons color="#898989" name="md-call" size={25} style={styles.icon1} /> */}
-                        <Image source={require('../../src/assets/image/alert.gif')}  style={[styles.icon1,{ height: verticalScale(40), width: horizontalScale(30), marginBottom:verticalScale(10) }]}/>
+                        <Image source={require('../../src/assets/image/alert.gif')} style={[styles.icon1, { height: verticalScale(40), width: horizontalScale(30), marginBottom: verticalScale(10) }]} />
                     </View>
                     <View style={styles.btnview1}>
                         <Text style={styles.vectorText}>Ambulance</Text>
@@ -31,10 +30,10 @@ export default function Security({navigation}) {
                         {/* <Image source={require('../../src/assets/image/ambulance.gif')}  style={[styles.icon1,{ height: verticalScale(40), width: horizontalScale(40) }]}/> */}
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.btn}onPress={() => { Linking.openURL('tel:100'); }}>
+                <TouchableOpacity style={styles.btn} onPress={() => { Linking.openURL('tel:100'); }}>
                     <View>
                         {/* <Ionicons color="#898989" name="md-call" size={25} style={styles.icon1} /> */}
-                        <Image source={require('../../src/assets/image/police.gif')}  style={[styles.icon1,{ height: verticalScale(40), width: horizontalScale(30) }]}/>
+                        <Image source={require('../../src/assets/image/police.gif')} style={[styles.icon1, { height: verticalScale(40), width: horizontalScale(30) }]} />
                     </View>
                     <View style={styles.btnview1}>
                         <Text style={styles.vectorText}>Police</Text>

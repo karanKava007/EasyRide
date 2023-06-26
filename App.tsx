@@ -48,7 +48,6 @@ function App(): JSX.Element {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <NavigationContainer>
-            {/* <StackNav /> */}
             <AuthNav/>
           </NavigationContainer>
         </PersistGate>

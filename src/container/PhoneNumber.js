@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from 'react-native'
 import React, { useState } from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
 import Flag from 'react-native-flags';
@@ -7,8 +7,6 @@ import { useDispatch } from 'react-redux';
 import { ConfirmPhoneAuth } from '../redux/action/auth.action';
 import { object, string, number, date, InferType } from 'yup';
 import { Form, Formik, useFormik } from 'formik';
-
-// import  Icon  from '@iconify/react';
 
 export default function PhoneNumber({ navigation }) {
     const dispatch = useDispatch()
@@ -22,6 +20,10 @@ export default function PhoneNumber({ navigation }) {
 
     // <Text>{navigation}</Text>
     return (
+        <KeyboardAvoidingView
+            style={styles.container1}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Formik
             validationSchema={userSchema}
             initialValues={{ phoneNo: '' }}
@@ -62,13 +64,18 @@ export default function PhoneNumber({ navigation }) {
                     </View >
                 </>
             )
-            }
+        }
         </Formik >
+        </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
     )
 }
 
 
 const styles = StyleSheet.create({
+    container1:{
+        flex:1,
+    },
     container: {
         flex: 1,
         backgroundColor: 'white',
@@ -103,14 +110,14 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly',
     },
     createdown: {
-        marginTop: verticalScale(14) && horizontalScale(14),
+        marginTop: verticalScale(16) && horizontalScale(16),
         color: 'black',
     },
     flag: {
-        marginTop: verticalScale(10) && horizontalScale(10),
+        marginTop: verticalScale(12) && horizontalScale(12),
     },
     number: {
-        marginTop: verticalScale(16) && horizontalScale(15),
+        marginTop: verticalScale(18) && horizontalScale(18),
         color: '#000',
     },
     input: {

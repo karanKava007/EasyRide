@@ -1,4 +1,4 @@
-import { View, Text, Button, TouchableOpacity, StyleSheet, TextInput, ScrollView, Dimensions, Image } from 'react-native'
+import { View, Text, Button, TouchableOpacity, StyleSheet, TextInput, ScrollView, Dimensions, Image, Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import DatePicker from 'react-native-date-picker'
 import { Dropdown } from 'react-native-element-dropdown';
@@ -92,213 +92,222 @@ export default function DriverRegistration({ navigation }) {
 
 
     return (
-        <Formik
-            validationSchema={driverSchema}
-            initialValues={{ fname: '', lname: '', dob: '', gender: '', spin: '', dpin: '', vehicle: '', rideTime: '', image: '', plateno: '' }}
-            onSubmit={(values, { resetForm }) => {
+        <KeyboardAvoidingView
+            style={styles.container1}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <Formik
+                    validationSchema={driverSchema}
+                    initialValues={{ fname: '', lname: '', dob: '', gender: '', spin: '', dpin: '', vehicle: '', rideTime: '', image: '', plateno: '' }}
+                    onSubmit={(values, { resetForm }) => {
 
-                dispatch(postDriverInfo(
-                    {
-                        userid: userUid.user.uid,
-                        firstName: values.fname,
-                        lastName: values.lname,
-                        dob: values.dob,
-                        gender: values.gender,
-                        sourcePincode: values.spin,
-                        destinationPincode: values.dpin,
-                        vehicalType: values.vehicle,
-                        rideTime: values.rideTime.toLocaleTimeString().toLowerCase(),
-                        age: agee,
-                        image: imagePath,
-                        PlateNo: values.plateno.toUpperCase(),
-                        userType: 'driver',
-                    }));
-                resetForm();
-            }}
-        >
-            {({
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                values,
-                errors,
-                isValid,
-                touched,
-                setFieldValue
-            }) => (
-                <>
-                    <ScrollView>
-                        <View style={styles.container}>
-                            {/* UserProfile Image Below*/}
-                            <View style={styles.ProfileContainer}>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        ImagePicker.openPicker({
-                                            width: 300,
-                                            height: 400,
-                                            cropping: true
-                                        })
-                                            .then((image) => { setImagePath(image.path); setFieldValue("image", image.path) });
-                                    }}
-                                    name='image'>
-                                    <View style={styles.subProfileContainer}>
-                                        <Image source={imagePath == '' ? require('../assets/image/user.png') : { uri: imagePath }} style={{ height: '100%', width: '100%' }} />
+                        dispatch(postDriverInfo(
+                            {
+                                userid: userUid.user.uid,
+                                firstName: values.fname,
+                                lastName: values.lname,
+                                dob: values.dob,
+                                gender: values.gender,
+                                sourcePincode: values.spin,
+                                destinationPincode: values.dpin,
+                                vehicalType: values.vehicle,
+                                rideTime: values.rideTime.toLocaleTimeString().toLowerCase(),
+                                age: agee,
+                                image: imagePath,
+                                PlateNo: values.plateno.toUpperCase(),
+                                userType: 'driver',
+                            }));
+                        resetForm();
+                    }}
+                >
+                    {({
+                        handleChange,
+                        handleBlur,
+                        handleSubmit,
+                        values,
+                        errors,
+                        isValid,
+                        touched,
+                        setFieldValue
+                    }) => (
+                        <>
+                            <ScrollView>
+                                <View style={styles.container}>
+                                    {/* UserProfile Image Below*/}
+                                    <View style={styles.ProfileContainer}>
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                ImagePicker.openPicker({
+                                                    width: 300,
+                                                    height: 400,
+                                                    cropping: true
+                                                })
+                                                    .then((image) => { setImagePath(image.path); setFieldValue("image", image.path) });
+                                            }}
+                                            name='image'>
+                                            <View style={styles.subProfileContainer}>
+                                                <Image source={imagePath == '' ? require('../assets/image/user.png') : { uri: imagePath }} style={{ height: '100%', width: '100%' }} />
 
+                                            </View>
+                                        </TouchableOpacity>
+                                        <Text style={styles.validation}>{errors.image != '' && touched.image ? errors.image : ''}</Text>
                                     </View>
-                                </TouchableOpacity>
-                                <Text style={styles.validation}>{errors.image != '' && touched.image ? errors.image : ''}</Text>
-                            </View>
-                            <View style={styles.subcontainer1}>
-                            </View>
-                            <View>
-                                <TextInput placeholder='First Name' placeholderTextColor={'#898989'} name='fname' onChangeText={handleChange('fname')} style={styles.textname} />
-                                <Text style={styles.validation}>{errors.fname != '' && touched.fname ? errors.fname : ''}</Text>
+                                    <View style={styles.subcontainer1}>
+                                    </View>
+                                    <View>
+                                        <TextInput placeholder='First Name' placeholderTextColor={'#898989'} name='fname' onChangeText={handleChange('fname')} style={styles.textname} />
+                                        <Text style={styles.validation}>{errors.fname != '' && touched.fname ? errors.fname : ''}</Text>
 
-                                <TextInput placeholder='Last Name' placeholderTextColor={'#898989'} name='lname' onChangeText={handleChange('lname')} style={styles.textname} />
-                                <Text style={styles.validation}>{errors.lname != '' && touched.lname ? errors.lname : ''}</Text>
+                                        <TextInput placeholder='Last Name' placeholderTextColor={'#898989'} name='lname' onChangeText={handleChange('lname')} style={styles.textname} />
+                                        <Text style={styles.validation}>{errors.lname != '' && touched.lname ? errors.lname : ''}</Text>
 
-                                <TouchableOpacity onPress={() => setOpen(true)}>
-                                    <Text style={[styles.textnamee]} >{show ? "DOB" : <Text style={styles.textname}>{date.toDateString()}</Text>}</Text>
-                                </TouchableOpacity>
-                                <DatePicker
-                                    mode="date"
-                                    modal
-                                    name='dob'
-                                    open={open}
-                                    date={date}
-                                    maximumDate={tdate}
-                                    onConfirm={(date) => {
-                                        setOpen(false)
-                                        setDate(date)
-                                        setShow(false)
-                                        setDob(date.toDateString())
-                                        setFieldValue("dob", date)
-                                    }}
-                                    onCancel={() => {
-                                        setOpen(false)
-                                    }} />
-                                <Text style={styles.validation}>{errors.dob != '' && touched.dob ? errors.dob : ''}</Text>
+                                        <TouchableOpacity onPress={() => setOpen(true)}>
+                                            <Text style={[styles.textnamee]} >{show ? "DOB" : <Text style={styles.textname}>{date.toDateString()}</Text>}</Text>
+                                        </TouchableOpacity>
+                                        <DatePicker
+                                            mode="date"
+                                            modal
+                                            name='dob'
+                                            open={open}
+                                            date={date}
+                                            maximumDate={tdate}
+                                            onConfirm={(date) => {
+                                                setOpen(false)
+                                                setDate(date)
+                                                setShow(false)
+                                                setDob(date.toDateString())
+                                                setFieldValue("dob", date)
+                                            }}
+                                            onCancel={() => {
+                                                setOpen(false)
+                                            }} />
+                                        <Text style={styles.validation}>{errors.dob != '' && touched.dob ? errors.dob : ''}</Text>
 
-                                <Dropdown
-                                    style={styles.dropdown}
-                                    placeholderStyle={styles.placeholderStyle}
-                                    selectedTextStyle={styles.selectedTextStyle}
-                                    iconStyle={styles.iconStyle}
-                                    data={genderData}
-                                    maxHeight={300}
-                                    labelField="label1"
-                                    valueField="value"
-                                    placeholder="Gender"
-                                    value={values.gender}
-                                    itemTextStyle={{ color: 'black' }}
-                                    name='gender'
-                                    onChange={item => {
-                                        setFieldValue("gender", item.value)
-                                    }}
+                                        <Dropdown
+                                            style={styles.dropdown}
+                                            placeholderStyle={styles.placeholderStyle}
+                                            selectedTextStyle={styles.selectedTextStyle}
+                                            iconStyle={styles.iconStyle}
+                                            data={genderData}
+                                            maxHeight={300}
+                                            labelField="label1"
+                                            valueField="value"
+                                            placeholder="Gender"
+                                            value={values.gender}
+                                            itemTextStyle={{ color: 'black' }}
+                                            name='gender'
+                                            onChange={item => {
+                                                setFieldValue("gender", item.value)
+                                            }}
 
-                                />
-                                <Text style={styles.validation}>{errors.gender != '' && touched.gender ? errors.gender : ''}</Text>
-                                <Dropdown
-                                    style={styles.dropdown}
-                                    placeholderStyle={styles.placeholderStyle}
-                                    selectedTextStyle={styles.selectedTextStyle}
-                                    inputSearchStyle={styles.inputSearchStyle}
-                                    iconStyle={styles.iconStyle}
-                                    data={pinData}
-                                    search
-                                    maxHeight={300}
-                                    labelField="label1"
-                                    valueField="value"
-                                    placeholder="Source Pincode"
-                                    value={values.spin}
-                                    itemTextStyle={{ color: 'black' }}
-                                    name='spin'
-                                    onChangeText={handleChange('spin')}
-                                    onChange={item => {
-                                        setFieldValue("spin", item.value)
-                                    }}
-                                />
-                                <Text style={styles.validation}>{errors.spin != '' && touched.spin ? errors.spin : ''}</Text>
-                                <Dropdown
-                                    style={styles.dropdown}
-                                    placeholderStyle={styles.placeholderStyle}
-                                    selectedTextStyle={styles.selectedTextStyle}
-                                    inputSearchStyle={styles.inputSearchStyle}
-                                    iconStyle={styles.iconStyle}
-                                    data={pinData}
-                                    search
-                                    maxHeight={300}
-                                    labelField="label1"
-                                    valueField="value"
-                                    placeholder="Destination Pincode"
-                                    value={values.dpin}
-                                    itemTextStyle={{ color: 'black' }}
-                                    name='dpin'
-                                    onChangeText={handleChange('dpin')}
-                                    onChange={item => {
-                                        setFieldValue("dpin", item.value)
-                                    }}
-                                />
-                                <Text style={styles.validation}>{errors.dpin != '' && touched.dpin ? errors.dpin : ''}</Text>
-                                <Dropdown
-                                    style={styles.dropdown}
-                                    placeholderStyle={styles.placeholderStyle}
-                                    selectedTextStyle={styles.selectedTextStyle}
-                                    iconStyle={styles.iconStyle}
-                                    data={vehicleData}
-                                    maxHeight={300}
-                                    labelField="label1"
-                                    valueField="value"
-                                    placeholder="Vehical Type"
-                                    value={values.vehicle}
-                                    itemTextStyle={{ color: 'black' }}
-                                    name='vehicle'
-                                    onChangeText={handleChange('vehicle')}
-                                    onChange={item => {
-                                        setFieldValue("vehicle", item.value)
-                                    }}
-                                />
-                                <Text style={styles.validation}>{errors.vehicle != '' && touched.vehicle ? errors.vehicle : ''}</Text>
-                                <TouchableOpacity onPress={() => setOpenTime(true)} >
-                                    <Text style={[styles.textnamee]}>{showTime ? "Ride Time" : <Text style={styles.textname}>{time.toLocaleTimeString()}</Text>}</Text>
-                                </TouchableOpacity>
-                                <DatePicker
-                                    mode="time"
-                                    modal
-                                    open={openTime}
-                                    date={time}
-                                    minuteInterval={15}
-                                    name='rideTime'
-                                    onConfirm={(date) => {
-                                        setOpenTime(false)
-                                        setTime(date)
-                                        setShowTime(false)
-                                        setFieldValue('rideTime', date)
-                                        handleChange('rideTime')
-                                    }}
-                                    onCancel={() => {
-                                        setOpenTime(false)
-                                    }} />
-                                <Text style={styles.validation}>{errors.rideTime != '' && touched.rideTime ? errors.rideTime : ''}</Text>
-                                <TextInput placeholder='Vehicle Plate Number' placeholderTextColor={'#898989'} name='plateno' onChangeText={handleChange('plateno')} style={styles.textname} />
-                                <Text style={styles.validation}>{errors.plateno != '' && touched.plateno ? errors.plateno : ''}</Text>
-                                <View style={styles.button1}>
-                                    <TouchableOpacity style={styles.button} onPress={() => { countAge(); handleSubmit(); }}>
-                                        <Text style={styles.btnText}>Next</Text>
-                                    </TouchableOpacity>
+                                        />
+                                        <Text style={styles.validation}>{errors.gender != '' && touched.gender ? errors.gender : ''}</Text>
+                                        <Dropdown
+                                            style={styles.dropdown}
+                                            placeholderStyle={styles.placeholderStyle}
+                                            selectedTextStyle={styles.selectedTextStyle}
+                                            inputSearchStyle={styles.inputSearchStyle}
+                                            iconStyle={styles.iconStyle}
+                                            data={pinData}
+                                            search
+                                            maxHeight={300}
+                                            labelField="label1"
+                                            valueField="value"
+                                            placeholder="Source Pincode"
+                                            value={values.spin}
+                                            itemTextStyle={{ color: 'black' }}
+                                            name='spin'
+                                            onChangeText={handleChange('spin')}
+                                            onChange={item => {
+                                                setFieldValue("spin", item.value)
+                                            }}
+                                        />
+                                        <Text style={styles.validation}>{errors.spin != '' && touched.spin ? errors.spin : ''}</Text>
+                                        <Dropdown
+                                            style={styles.dropdown}
+                                            placeholderStyle={styles.placeholderStyle}
+                                            selectedTextStyle={styles.selectedTextStyle}
+                                            inputSearchStyle={styles.inputSearchStyle}
+                                            iconStyle={styles.iconStyle}
+                                            data={pinData}
+                                            search
+                                            maxHeight={300}
+                                            labelField="label1"
+                                            valueField="value"
+                                            placeholder="Destination Pincode"
+                                            value={values.dpin}
+                                            itemTextStyle={{ color: 'black' }}
+                                            name='dpin'
+                                            onChangeText={handleChange('dpin')}
+                                            onChange={item => {
+                                                setFieldValue("dpin", item.value)
+                                            }}
+                                        />
+                                        <Text style={styles.validation}>{errors.dpin != '' && touched.dpin ? errors.dpin : ''}</Text>
+                                        <Dropdown
+                                            style={styles.dropdown}
+                                            placeholderStyle={styles.placeholderStyle}
+                                            selectedTextStyle={styles.selectedTextStyle}
+                                            iconStyle={styles.iconStyle}
+                                            data={vehicleData}
+                                            maxHeight={300}
+                                            labelField="label1"
+                                            valueField="value"
+                                            placeholder="Vehical Type"
+                                            value={values.vehicle}
+                                            itemTextStyle={{ color: 'black' }}
+                                            name='vehicle'
+                                            onChangeText={handleChange('vehicle')}
+                                            onChange={item => {
+                                                setFieldValue("vehicle", item.value)
+                                            }}
+                                        />
+                                        <Text style={styles.validation}>{errors.vehicle != '' && touched.vehicle ? errors.vehicle : ''}</Text>
+                                        <TouchableOpacity onPress={() => setOpenTime(true)} >
+                                            <Text style={[styles.textnamee]}>{showTime ? "Ride Time" : <Text style={styles.textname}>{time.toLocaleTimeString()}</Text>}</Text>
+                                        </TouchableOpacity>
+                                        <DatePicker
+                                            mode="time"
+                                            modal
+                                            open={openTime}
+                                            date={time}
+                                            minuteInterval={15}
+                                            name='rideTime'
+                                            onConfirm={(date) => {
+                                                setOpenTime(false)
+                                                setTime(date)
+                                                setShowTime(false)
+                                                setFieldValue('rideTime', date)
+                                                handleChange('rideTime')
+                                            }}
+                                            onCancel={() => {
+                                                setOpenTime(false)
+                                            }} />
+                                        <Text style={styles.validation}>{errors.rideTime != '' && touched.rideTime ? errors.rideTime : ''}</Text>
+                                        <TextInput placeholder='Vehicle Plate Number' placeholderTextColor={'#898989'} name='plateno' onChangeText={handleChange('plateno')} style={styles.textname} />
+                                        <Text style={styles.validation}>{errors.plateno != '' && touched.plateno ? errors.plateno : ''}</Text>
+                                        <View style={styles.button1}>
+                                            <TouchableOpacity style={styles.button} onPress={() => { countAge(); handleSubmit(); }}>
+                                                <Text style={styles.btnText}>Next</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
                                 </View>
-                            </View>
-                        </View>
-                    </ScrollView>
-                </>
-            )}
-        </Formik>
+                            </ScrollView>
+                        </>
+                    )}
+                </Formik>
+            </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
     )
 }
 
 
 const { height, width } = Dimensions.get('window')
 const styles = StyleSheet.create({
+    container1:{
+        flex:1,
+    },
     container: {
         flex: 5,
         backgroundColor: 'white',
@@ -320,7 +329,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 2,
         borderColor: '#ccc',
-        borderStyle: 'dashed'
     },
     dropdown: {
         color: 'black',
@@ -383,7 +391,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginHorizontal: horizontalScale(20),
         marginVertical: verticalScale(12),
-        // marginTop: verticalScale(20)
     },
     textnamee: {
         color: '#868686',
